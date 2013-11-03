@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QLabel>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +19,11 @@ public:
     
 private:
     Ui::MainWindow *ui;
+
+private slots:
+    void OpenFile();
+    void Exit();
+    void Settings();
 };
 
 #endif // MAINWINDOW_H
