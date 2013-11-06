@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbOpen, SIGNAL(clicked()), this, SLOT(openFile()));
     connect(ui->pbExit, SIGNAL(clicked()), this, SLOT(exit()));
     connect(ui->pbSettings, SIGNAL(clicked()), this, SLOT(changeSettings()));
+
+    //Settings::getInstance();
 }
 
 MainWindow::~MainWindow()

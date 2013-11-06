@@ -6,6 +6,7 @@
 #include <QLabel>
 #include "settingsdialog.h"
 
+
 namespace Ui {
 class MainWindow;
 }

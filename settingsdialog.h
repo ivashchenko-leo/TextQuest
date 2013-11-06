@@ -6,6 +6,7 @@
 #include <QColorDialog>
 #include <QFont>
 #include <QFontDialog>
+#include "settings.h"
 
 namespace Ui {
 class SettingsDialog;
