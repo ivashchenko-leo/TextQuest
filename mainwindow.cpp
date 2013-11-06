@@ -6,9 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->pbOpen, SIGNAL(clicked()), this, SLOT(OpenFile()));
-    connect(ui->pbExit, SIGNAL(clicked()), this, SLOT(Exit()));
-    connect(ui->pbSettings, SIGNAL(clicked()), this, SLOT(Settings()));
+    connect(ui->pbOpen, SIGNAL(clicked()), this, SLOT(openFile()));
+    connect(ui->pbExit, SIGNAL(clicked()), this, SLOT(exit()));
+    connect(ui->pbSettings, SIGNAL(clicked()), this, SLOT(changeSettings()));
 }
 
 MainWindow::~MainWindow()
@@ -16,7 +16,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::OpenFile()
+void MainWindow::openFile()
 {
     QString FileName;
 
@@ -24,17 +24,24 @@ void MainWindow::OpenFile()
 
     if (!FileName.isEmpty())
     {
-        //There will be action soon
+
     }
 }
 
-void MainWindow::Exit()
+void MainWindow::exit()
 {
     QApplication::closeAllWindows();
 }
 
-void MainWindow::Settings()
+void MainWindow::changeSettings()
 {
+    SettingsDialog* pSettingsDialog = new SettingsDialog(this);
 
+    this->hide();
+
+    if (pSettingsDialog->exec() == QDialog::Accepted)
+    {
+        this->show();
+    }
 }
 

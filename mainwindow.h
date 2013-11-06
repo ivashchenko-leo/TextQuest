@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QLabel>
+#include "settingsdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,9 +22,9 @@ private:
     Ui::MainWindow *ui;
 
 private slots:
-    void OpenFile();
-    void Exit();
-    void Settings();
+    void openFile();
+    void exit();
+    void changeSettings();
 };
 
 #endif // MAINWINDOW_H
