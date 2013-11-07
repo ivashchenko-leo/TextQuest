@@ -41,9 +41,9 @@ void MainWindow::changeSettings()
 
     this->hide();
 
-    if (pSettingsDialog->exec() == QDialog::Accepted)
-    {
-        this->show();
-    }
+    pSettingsDialog->setModal(true);
+    pSettingsDialog->exec();
+
+    this->show();
 }
 

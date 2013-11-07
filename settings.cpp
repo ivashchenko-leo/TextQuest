@@ -13,7 +13,7 @@ Settings* Settings::getInstance()
 
     if(!instance)
     {
-        if (file.exists())
+        if (!file.exists())
         {
             file.open(QIODevice::ReadWrite);
         }
@@ -24,4 +24,37 @@ Settings* Settings::getInstance()
     return instance;
 }
 
+void Settings::readSettings()
+{
 
+}
+
+void Settings::save()
+{
+
+}
+
+void Settings::setUnreadText(bool status)
+{
+    this->pSettingsMap["UnreadText"] = status ? TRUE_STRING : FALSE_STRING;
+}
+
+void Settings::setAutoRead(bool status)
+{
+    this->pSettingsMap["AutoRead"] = status ? TRUE_STRING : FALSE_STRING;
+}
+
+void Settings::setAfterChoice(bool status)
+{
+    this->pSettingsMap["AfterChoice"] = status ? TRUE_STRING : FALSE_STRING;
+}
+
+void Settings::setFullScreen(bool status)
+{
+    this->pSettingsMap["FullScreen"] = status ? TRUE_STRING : FALSE_STRING;
+}
+
+void Settings::setSound(bool status)
+{
+    this->pSettingsMap["Sound"] = status ? TRUE_STRING : FALSE_STRING;
+}
