@@ -19,8 +19,8 @@ class Settings : public QFile
 
 public:
     static Settings* getInstance();
-    void Settings::readSettings();
-    void Settings::save();
+    void readSettings();
+    void save();
 
 private:
     QMap<QString, QString> pSettingsMap;

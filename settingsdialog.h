@@ -26,6 +26,7 @@ private:
 private slots:
     void changeColor();
     void acceptSettings();
+    void rejectSettings();
     void changeFont();
 };
 
