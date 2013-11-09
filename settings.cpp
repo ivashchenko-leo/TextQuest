@@ -18,9 +18,25 @@ Settings* Settings::getInstance()
     return instance;
 }
 
+bool Settings::setupAtUi(SettingsDialog* sd)
+{
+    QObjectList List;
+
+    if (!this->pSettingsMap.isEmpty())
+    {
+
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 QMap<QString, QVariant>* Settings::getSettings(SettingsDialog* sd)
 {
-    this->load(sd);
+    this->load(this->getWidgets(sd));
 
     return &this->pSettingsMap;
 }
@@ -48,15 +64,14 @@ void Settings::flush()
 
 void Settings::save(SettingsDialog* sd)
 {
-    this->load(sd);
+    this->load(this->getWidgets(sd));
     this->flush();
 }
 
-void Settings::load(SettingsDialog* sd)
+QObjectList Settings::getWidgets(SettingsDialog* sd)
 {
-    QStringList reList;
-    QRegExp re("^(cb|hs)");
     QObjectList List;
+    QRegExp re("^(cb|hs)");
 
     List = sd->children();
 
@@ -67,20 +82,30 @@ void Settings::load(SettingsDialog* sd)
             List.removeAt(i);
             i--;
         }
+    }
+
+    return List;
+}
+
+void Settings::load(QObjectList List)
+{
+    QStringList reList;
+    QRegExp re("^(cb|hs)");
+
+    for (int i=0; i < List.size();i++)
+    {
+        re.indexIn(List.at(i)->objectName());
+        reList = re.capturedTexts();
+
+        if (reList.at(1) == QString("cb"))
+        {
+            this->pSettingsMap.insert(List.at(i)->objectName(), ((QCheckBox* )List.at(i))->isChecked());
+        }
         else
         {
-            reList = re.capturedTexts();
-
-            if (reList.at(1) == QString("cb"))
+            if (reList.at(1) == QString("hs"))
             {
-                this->pSettingsMap.insert(List.at(i)->objectName(), ((QCheckBox* )List.at(i))->isChecked());
-            }
-            else
-            {
-                if (reList.at(1) == QString("hs"))
-                {
-                    this->pSettingsMap.insert(List.at(i)->objectName(), ((QSlider* )List.at(i))->value());
-                }
+                this->pSettingsMap.insert(List.at(i)->objectName(), ((QSlider* )List.at(i))->value());
             }
         }
     }

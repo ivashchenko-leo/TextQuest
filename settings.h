@@ -20,14 +20,15 @@ public:
     void read();
     void save(SettingsDialog* sd);
     QMap<QString, QVariant>* getSettings(SettingsDialog* sd);
+    bool setupAtUi(SettingsDialog* sd);
 
 private:
     QFile* file;
     SettingsDialog* pSd;
     QMap<QString, QVariant> pSettingsMap;
-
+    QObjectList getWidgets(SettingsDialog* sd);
     void flush();
-    void load(SettingsDialog *sd);
+    void load(QObjectList List);
 
     static Settings* instance;
     explicit Settings();
