@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QLabel>
+//#include <QtGui>
 #include "settingsdialog.h"
 
 
@@ -17,10 +18,12 @@ class MainWindow : public QMainWindow
     
 public:
     explicit MainWindow(QWidget *parent = 0);
+
     ~MainWindow();
-    
+        
 private:
     Ui::MainWindow *ui;
+    SettingsDialog* pSettingsDialog;
 
 private slots:
     void openFile();

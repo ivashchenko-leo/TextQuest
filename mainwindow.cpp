@@ -3,14 +3,16 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    pSettingsDialog(new SettingsDialog(this))
 {
     ui->setupUi(this);
     connect(ui->pbOpen, SIGNAL(clicked()), this, SLOT(openFile()));
     connect(ui->pbExit, SIGNAL(clicked()), this, SLOT(exit()));
     connect(ui->pbSettings, SIGNAL(clicked()), this, SLOT(changeSettings()));
 
-    //Settings::getInstance();
+    Settings::getInstance()->save(pSettingsDialog);
+    Settings::getInstance()->read();
 }
 
 MainWindow::~MainWindow()
@@ -37,13 +39,10 @@ void MainWindow::exit()
 
 void MainWindow::changeSettings()
 {
-    SettingsDialog* pSettingsDialog = new SettingsDialog(this);
-
     this->hide();
 
-    pSettingsDialog->setModal(true);
-    pSettingsDialog->exec();
+    this->pSettingsDialog->exec();
 
-    this->show();
+    this->setVisible(true);
 }
 

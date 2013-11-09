@@ -1,60 +1,87 @@
 #include "settings.h"
 Settings* Settings::instance = 0;
 
-Settings::Settings(QFile* parent) :
-    QFile(parent)
+Settings::Settings() :
+    QObject(),
+    file(new QFile(QString("config.bin")))
 {
-
+    this->file->open(QIODevice::ReadWrite);
 }
 
 Settings* Settings::getInstance()
 {
-    QFile file(CONFIG_NAME);
-
     if(!instance)
     {
-        if (!file.exists())
-        {
-            file.open(QIODevice::ReadWrite);
-        }
-
-        instance = new Settings(&file);
+        instance = new Settings();
     }
 
     return instance;
 }
 
-void Settings::readSettings()
+QMap<QString, QVariant>* Settings::getSettings(SettingsDialog* sd)
 {
+    this->load(sd);
 
+    return &this->pSettingsMap;
 }
 
-void Settings::save()
+void Settings::read()
 {
+    QDataStream stream(this->file);
 
+    stream.setVersion(QDataStream::Qt_4_8);
+    stream >> this->pSettingsMap;
 }
 
-void Settings::setUnreadText(bool status)
+void Settings::flush()
 {
-    this->pSettingsMap["UnreadText"] = status ? TRUE_STRING : FALSE_STRING;
+    QDataStream stream(this->file);
+
+    if (this->pSettingsMap.isEmpty())
+    {
+        this->read();
+    }
+
+    stream.setVersion(QDataStream::Qt_4_8);
+    stream << this->pSettingsMap;
 }
 
-void Settings::setAutoRead(bool status)
+void Settings::save(SettingsDialog* sd)
 {
-    this->pSettingsMap["AutoRead"] = status ? TRUE_STRING : FALSE_STRING;
+    this->load(sd);
+    this->flush();
 }
 
-void Settings::setAfterChoice(bool status)
+void Settings::load(SettingsDialog* sd)
 {
-    this->pSettingsMap["AfterChoice"] = status ? TRUE_STRING : FALSE_STRING;
-}
+    QStringList reList;
+    QRegExp re("^(cb|hs)");
+    QObjectList List;
 
-void Settings::setFullScreen(bool status)
-{
-    this->pSettingsMap["FullScreen"] = status ? TRUE_STRING : FALSE_STRING;
-}
+    List = sd->children();
 
-void Settings::setSound(bool status)
-{
-    this->pSettingsMap["Sound"] = status ? TRUE_STRING : FALSE_STRING;
+    for (int i=0; i < List.size();i++)
+    {
+        if (re.indexIn(List.at(i)->objectName()) == -1)
+        {
+            List.removeAt(i);
+            i--;
+        }
+        else
+        {
+            reList = re.capturedTexts();
+
+            if (reList.at(1) == QString("cb"))
+            {
+                this->pSettingsMap.insert(List.at(i)->objectName(), ((QCheckBox* )List.at(i))->isChecked());
+            }
+            else
+            {
+                if (reList.at(1) == QString("hs"))
+                {
+                    this->pSettingsMap.insert(List.at(i)->objectName(), ((QSlider* )List.at(i))->value());
+                }
+            }
+        }
+    }
 }

@@ -6,7 +6,11 @@
 #include <QColorDialog>
 #include <QFont>
 #include <QFontDialog>
+#include <QRegExp>
 #include "settings.h"
+#include <QMouseEvent>
+#include <QMessageBox>
+//#include <QPoint>
 
 namespace Ui {
 class SettingsDialog;
@@ -19,9 +23,12 @@ class SettingsDialog : public QDialog
 public:
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
-    
+
 private:
     Ui::SettingsDialog *ui;
+
+protected:
+    //virtual void mousePressEvent(QMouseEvent* mouse);
 
 private slots:
     void changeColor();

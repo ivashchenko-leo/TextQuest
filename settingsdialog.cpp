@@ -7,14 +7,15 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //ui->cbAutoRead->installEventFilter(new SettingsFilter(ui->cbAutoRead));
     connect(ui->pbOk, SIGNAL(clicked()), this, SLOT(acceptSettings()));
     connect(ui->tbColor, SIGNAL(clicked()), this, SLOT(changeColor()));
     connect(ui->tbFont, SIGNAL(clicked()), this, SLOT(changeFont()));
-    connect(ui->cbSkipUnreadText, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setUnreadText(bool)));
-    connect(ui->cbAutoRead, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setAutoRead(bool)));
+    //connect(ui->cbSkipUnreadText, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setUnreadText(bool)));
+    /*connect(ui->cbAutoRead, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setAutoRead(bool)));
     connect(ui->cbSkipAfterChoice, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setAfterChoice(bool)));
     connect(ui->cbFullScreen, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setFullScreen(bool)));
-    connect(ui->cbSound, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setSound(bool)));
+    connect(ui->cbSound, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setSound(bool)));*/
 }
 
 SettingsDialog::~SettingsDialog()
@@ -45,6 +46,7 @@ void SettingsDialog::changeFont()
 
 void SettingsDialog::acceptSettings()
 {
+    Settings::getInstance()->save(this);
     this->accept();
 }
 
@@ -52,3 +54,36 @@ void SettingsDialog::rejectSettings()
 {
     this->reject();
 }
+
+/*virtual*/
+/*void SettingsDialog::mousePressEvent(QMouseEvent* mouse)
+{
+    QPoint coord;
+    QWidget* widget;
+
+    coord = mouse->pos();
+    widget = qApp->widgetAt(this->mapToGlobal(coord));
+    QMessageBox::information(this, "Title", widget->objectName());
+    //mouse->
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
