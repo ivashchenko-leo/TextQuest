@@ -11,8 +11,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbExit, SIGNAL(clicked()), this, SLOT(exit()));
     connect(ui->pbSettings, SIGNAL(clicked()), this, SLOT(changeSettings()));
 
-    Settings::getInstance()->save(pSettingsDialog);
+    //Settings::getInstance()->save(pSettingsDialog);
+
     Settings::getInstance()->read();
+    Settings::getInstance()->setupAtUi(pSettingsDialog);
+
+    qDebug() << Settings::getInstance()->getFont();
 }
 
 MainWindow::~MainWindow()

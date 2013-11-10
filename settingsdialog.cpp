@@ -25,28 +25,30 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::changeColor()
 {
-    QColor Color = QColorDialog::getColor(Qt::lightGray, this);
-
+    QColor Color = QColorDialog::getColor(Settings::getInstance()->getTextColor(), this);
     if (Color.isValid())
     {
-
+        Settings::getInstance()->setTextColor(Color);
+        Settings::getInstance()->flush();
     }
 }
 
 void SettingsDialog::changeFont()
 {
     bool ok;
-    QFont font = QFontDialog::getFont(&ok, this);
+    QFont font = QFontDialog::getFont(&ok, Settings::getInstance()->getFont(), this);
 
     if (ok)
     {
-
+        Settings::getInstance()->setFont(font);
+        Settings::getInstance()->flush();
     }
 }
 
 void SettingsDialog::acceptSettings()
 {
-    Settings::getInstance()->save(this);
+    Settings::getInstance()->setSettings(Settings::FromUi, this);
+    Settings::getInstance()->flush();
     this->accept();
 }
 

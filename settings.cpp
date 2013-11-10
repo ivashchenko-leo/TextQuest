@@ -3,9 +3,8 @@ Settings* Settings::instance = 0;
 
 Settings::Settings() :
     QObject(),
-    file(new QFile(QString("config.bin")))
+    file(new QFile(QString("config.cfg")))
 {
-    this->file->open(QIODevice::ReadWrite);
 }
 
 Settings* Settings::getInstance()
@@ -18,60 +17,104 @@ Settings* Settings::getInstance()
     return instance;
 }
 
-bool Settings::setupAtUi(SettingsDialog* sd)
+void Settings::setupAtUi(SettingsDialog* sd)
 {
-    QObjectList List;
-
-    if (!this->pSettingsMap.isEmpty())
+    if (this->pSettingsMap.isEmpty())
     {
-
-
-        return true;
+        this->setSettings(this->FromUi, sd);
+        this->flush();
     }
     else
     {
-        return false;
+        this->setSettings(this->OnUi, sd);
     }
 }
 
-QMap<QString, QVariant>* Settings::getSettings(SettingsDialog* sd)
+void Settings::setTextColor(QColor color)
 {
-    this->load(this->getWidgets(sd));
+    this->color = color;
+}
 
+QColor Settings::getTextColor()
+{
+    if (!this->color.isValid())
+    {
+        this->color.setRgb(0,0,0);
+    }
+
+    return this->color;
+}
+
+void Settings::setFont(QFont font)
+{
+    this->font = font;
+}
+
+QFont Settings::getFont()
+{
+    if (this->font.family().isEmpty())
+    {
+        this->font.fromString(QString("Arial,6,-1,5,75,0,0,0,0,0"));
+    }
+
+    return this->font;
+}
+
+QMap<QString, QVariant>* Settings::getSettings()
+{
     return &this->pSettingsMap;
 }
 
 void Settings::read()
 {
+    this->file->open(QIODevice::ReadOnly);
+
     QDataStream stream(this->file);
 
     stream.setVersion(QDataStream::Qt_4_8);
-    stream >> this->pSettingsMap;
+    stream >> this->pSettingsMap >> this->color >> this->font;
+
+//    foreach (QString key, this->pSettingsMap.keys())
+//    {
+//        qDebug() << this->pSettingsMap.value(key);
+//    }
+
+    if(stream.status() != QDataStream::Ok)
+    {
+        qDebug() << "Error at reading file";
+    }
+
+    this->file->close();
 }
 
 void Settings::flush()
 {
+    this->file->open(QIODevice::WriteOnly | QIODevice::Truncate);
+
     QDataStream stream(this->file);
 
-    if (this->pSettingsMap.isEmpty())
+    stream.setVersion(QDataStream::Qt_4_8);
+    stream << this->pSettingsMap << this->getTextColor() << this->getFont();
+
+//    foreach (QString key, this->pSettingsMap.keys())
+//    {
+//        qDebug() << this->pSettingsMap.value(key);
+//    }
+
+    if(stream.status() != QDataStream::Ok)
     {
-        this->read();
+        qDebug() << "Error at writing file";
     }
 
-    stream.setVersion(QDataStream::Qt_4_8);
-    stream << this->pSettingsMap;
+    this->file->flush();
+    this->file->close();
 }
 
-void Settings::save(SettingsDialog* sd)
-{
-    this->load(this->getWidgets(sd));
-    this->flush();
-}
-
-QObjectList Settings::getWidgets(SettingsDialog* sd)
+void Settings::setSettings(int mode, SettingsDialog* sd)
 {
     QObjectList List;
     QRegExp re("^(cb|hs)");
+    QStringList reList;
 
     List = sd->children();
 
@@ -82,30 +125,39 @@ QObjectList Settings::getWidgets(SettingsDialog* sd)
             List.removeAt(i);
             i--;
         }
-    }
-
-    return List;
-}
-
-void Settings::load(QObjectList List)
-{
-    QStringList reList;
-    QRegExp re("^(cb|hs)");
-
-    for (int i=0; i < List.size();i++)
-    {
-        re.indexIn(List.at(i)->objectName());
-        reList = re.capturedTexts();
-
-        if (reList.at(1) == QString("cb"))
-        {
-            this->pSettingsMap.insert(List.at(i)->objectName(), ((QCheckBox* )List.at(i))->isChecked());
-        }
         else
         {
-            if (reList.at(1) == QString("hs"))
+            re.indexIn(List.at(i)->objectName());
+            reList = re.capturedTexts();
+
+            if (reList.at(1) == QString("cb"))
             {
-                this->pSettingsMap.insert(List.at(i)->objectName(), ((QSlider* )List.at(i))->value());
+                if (mode == this->OnUi)
+                {
+                    ((QCheckBox* )List.at(i))->setChecked(this->pSettingsMap[List.at(i)->objectName()].toBool());
+                    //qDebug() << List.at(i)->objectName() << this->pSettingsMap[List.at(i)->objectName()].toBool();
+                }
+                else
+                {
+                    this->pSettingsMap.insert(List.at(i)->objectName(), ((QCheckBox* )List.at(i))->isChecked());
+                    //qDebug() << List.at(i)->objectName() << this->pSettingsMap[List.at(i)->objectName()].toBool();
+                }
+            }
+            else
+            {
+                if (reList.at(1) == QString("hs"))
+                {
+                    if (mode == this->OnUi)
+                    {
+                        ((QSlider* )List.at(i))->setValue(this->pSettingsMap[List.at(i)->objectName()].toInt());
+                        //qDebug() << List.at(i)->objectName() << this->pSettingsMap[List.at(i)->objectName()].toInt();
+                    }
+                    else
+                    {
+                        this->pSettingsMap.insert(List.at(i)->objectName(), ((QSlider* )List.at(i))->value());
+                        //qDebug() << List.at(i)->objectName() << this->pSettingsMap[List.at(i)->objectName()].toInt();
+                    }
+                }
             }
         }
     }

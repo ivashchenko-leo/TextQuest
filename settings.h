@@ -18,17 +18,21 @@ class Settings : public QObject
 public:
     static Settings* getInstance();
     void read();
-    void save(SettingsDialog* sd);
-    QMap<QString, QVariant>* getSettings(SettingsDialog* sd);
-    bool setupAtUi(SettingsDialog* sd);
+    QMap<QString, QVariant>* getSettings();
+    void setupAtUi(SettingsDialog* sd);
+    void setTextColor(QColor color);
+    void setFont(QFont font);
+    QFont getFont();
+    QColor getTextColor();
+    void setSettings(int mode, SettingsDialog* sd);
+    void flush();
+    enum mode {OnUi, FromUi};
 
 private:
     QFile* file;
-    SettingsDialog* pSd;
     QMap<QString, QVariant> pSettingsMap;
-    QObjectList getWidgets(SettingsDialog* sd);
-    void flush();
-    void load(QObjectList List);
+    QColor color;
+    QFont font;
 
     static Settings* instance;
     explicit Settings();
