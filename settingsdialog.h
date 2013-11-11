@@ -15,6 +15,7 @@
 namespace Ui {
 class SettingsDialog;
 }
+class Settings;
 
 class SettingsDialog : public QDialog
 {
@@ -23,17 +24,19 @@ class SettingsDialog : public QDialog
 public:
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
+    void setDefault();
 
 private:
     Ui::SettingsDialog *ui;
+    Settings *settings;
 
 protected:
     //virtual void mousePressEvent(QMouseEvent* mouse);
 
 private slots:
-    void changeColor();
+    void changeColorOne();
+    void changeColorTwo();
     void acceptSettings();
-    void rejectSettings();
     void changeFont();
 };
 

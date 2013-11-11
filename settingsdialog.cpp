@@ -3,19 +3,15 @@
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SettingsDialog)
+    ui(new Ui::SettingsDialog),
+    settings(Settings::instance())
 {
     ui->setupUi(this);
 
-    //ui->cbAutoRead->installEventFilter(new SettingsFilter(ui->cbAutoRead));
     connect(ui->pbOk, SIGNAL(clicked()), this, SLOT(acceptSettings()));
-    connect(ui->tbColor, SIGNAL(clicked()), this, SLOT(changeColor()));
+    connect(ui->tbColor1, SIGNAL(clicked()), this, SLOT(changeColorOne()));
+    connect(ui->tbColor2, SIGNAL(clicked()), this, SLOT(changeColorTwo()));
     connect(ui->tbFont, SIGNAL(clicked()), this, SLOT(changeFont()));
-    //connect(ui->cbSkipUnreadText, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setUnreadText(bool)));
-    /*connect(ui->cbAutoRead, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setAutoRead(bool)));
-    connect(ui->cbSkipAfterChoice, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setAfterChoice(bool)));
-    connect(ui->cbFullScreen, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setFullScreen(bool)));
-    connect(ui->cbSound, SIGNAL(clicked(bool)), Settings::getInstance(), SLOT(setSound(bool)));*/
 }
 
 SettingsDialog::~SettingsDialog()
@@ -23,38 +19,55 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 }
 
-void SettingsDialog::changeColor()
+void SettingsDialog::setDefault()
 {
-    QColor Color = QColorDialog::getColor(Settings::getInstance()->getTextColor(), this);
-    if (Color.isValid())
-    {
-        Settings::getInstance()->setTextColor(Color);
-        Settings::getInstance()->flush();
+    this->settings->setOption(QString("TextSpeed"), QVariant(ui->hsSpeed->value()));
+    this->settings->setOption(QString("Brightness"), QVariant(ui->hsBrightness->value()));
+    this->settings->setOption(QString("Transparency"), QVariant(ui->hsTransparency->value()));
+    this->settings->setOption(QString("Volume"), QVariant(ui->hsVolume->value()));
+    this->settings->setOption(QString("AutoRead"), QVariant(ui->cbAutoRead->isChecked()));
+    this->settings->setOption(QString("FullScreen"), QVariant(ui->cbFullScreen->isChecked()));
+    this->settings->setOption(QString("SkipAfterChoice"), QVariant(ui->cbSkipAfterChoice->isChecked()));
+    this->settings->setOption(QString("SkipUnreadText"), QVariant(ui->cbSkipUnreadText->isChecked()));
+    this->settings->setOption(QString("Sound"), QVariant(ui->cbSound->isChecked()));
+    this->settings->setOption(1, QColor(0, 0, 0));
+    this->settings->setOption(2, QColor(255, 255, 255));
+    this->settings->setOption(QFont("Arial"));
+}
+
+void SettingsDialog::changeColorOne()
+{
+    QColor Color = QColorDialog::getColor(this->settings->getColor(1), this);
+    if (Color.isValid()) {
+        this->settings->setOption(1, Color);
+        this->settings->flush();
+    }
+}
+
+void SettingsDialog::changeColorTwo()
+{
+    QColor Color = QColorDialog::getColor(this->settings->getColor(2), this);
+    if (Color.isValid()) {
+        this->settings->setOption(2, Color);
+        this->settings->flush();
     }
 }
 
 void SettingsDialog::changeFont()
 {
     bool ok;
-    QFont font = QFontDialog::getFont(&ok, Settings::getInstance()->getFont(), this);
+    QFont font = QFontDialog::getFont(&ok, this->settings->getFont(), this);
 
-    if (ok)
-    {
-        Settings::getInstance()->setFont(font);
-        Settings::getInstance()->flush();
+    if (ok) {
+        this->settings->setOption(font);
+        this->settings->flush();
     }
 }
 
 void SettingsDialog::acceptSettings()
 {
-    Settings::getInstance()->setSettings(Settings::FromUi, this);
-    Settings::getInstance()->flush();
+    this->settings->flush();
     this->accept();
-}
-
-void SettingsDialog::rejectSettings()
-{
-    this->reject();
 }
 
 /*virtual*/
@@ -68,17 +81,6 @@ void SettingsDialog::rejectSettings()
     QMessageBox::information(this, "Title", widget->objectName());
     //mouse->
 }*/
-
-
-
-
-
-
-
-
-
-
-
 
 
 
