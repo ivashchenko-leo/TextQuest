@@ -3,10 +3,7 @@
 
 #include <QFile>
 #include <QMap>
-#include "settingsdialog.h"
 #include <QtGui>
-
-class SettingsDialog;
 
 class Settings : public QObject
 {
@@ -15,22 +12,26 @@ class Settings : public QObject
 public:
     static Settings *instance();
     bool read();
-//    QMap<QString, QVariant>* getSettings();
-//    void setupAtUi(SettingsDialog* sd);
-//    void setTextColor(QColor color);
-//    void setFont(QFont font);
-//    QFont getFont();
-//    QColor getTextColor();
-//    void setSettings(int mode, SettingsDialog* sd);
     void flush();
-//    enum mode {OnUi, FromUi};
+
     QColor getColor(int number);
     QVariant getOption(QString option);
     QFont getFont();
     void setOption(QString key, QVariant value);
     void setOption(int number, QColor color);
     void setOption(QFont font);
-    const static QString fileName;
+
+    const static QString FileName;
+    const static QString TextSpeed;
+    const static QString Brightness;
+    const static QString Transparency;
+    const static QString Volume;
+    const static QString AutoRead;
+    const static QString FullScreen;
+    const static QString SkipAfterChoice;
+    const static QString SkipUnreadText;
+    const static QString Sound;
+    const static int ColorCount;
 
 private:
     QFile *file;
@@ -42,7 +43,5 @@ private:
     explicit Settings();
     Settings(Settings& root);
     Settings& operator = (Settings&);
-
-
 };
 #endif // SETTINGS_H

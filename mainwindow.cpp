@@ -14,8 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if (!Settings::instance()->read()) {
         this->pSettingsDialog->setDefault();
+        Settings::instance()->flush();
+    } else {
+        this->pSettingsDialog->loadOnUi();
     }
-    Settings::instance()->flush();
 }
 
 MainWindow::~MainWindow()

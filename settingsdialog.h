@@ -25,10 +25,12 @@ public:
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
     void setDefault();
+    void loadOnUi();
 
 private:
     Ui::SettingsDialog *ui;
     Settings *settings;
+    void loadFromUi();
 
 protected:
     //virtual void mousePressEvent(QMouseEvent* mouse);

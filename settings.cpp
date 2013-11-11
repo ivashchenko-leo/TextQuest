@@ -1,18 +1,26 @@
 #include "settings.h"
 Settings* Settings::self = 0;
-const QString Settings::fileName = "config.cfg";
-
+const QString Settings::FileName("config.cfg");
+const QString Settings::TextSpeed("TextSpeed");
+const QString Settings::Brightness("Brightness");
+const QString Settings::Transparency("Transparency");
+const QString Settings::Volume("Volume");
+const QString Settings::AutoRead("AutoRead");
+const QString Settings::FullScreen("FullScreen");
+const QString Settings::SkipAfterChoice("SkipAfterChoice");
+const QString Settings::SkipUnreadText("SkipUnreadText");
+const QString Settings::Sound("Sound");
+const int Settings::ColorCount = 2;
 
 Settings::Settings() :
     QObject(),
-    file(new QFile(Settings::fileName))
+    file(new QFile(Settings::FileName))
 {
 }
 
 Settings* Settings::instance()
 {
-    if(!Settings::self)
-    {
+    if(!Settings::self) {
         Settings::self = new Settings();
     }
 
@@ -41,79 +49,26 @@ void Settings::setOption(QString key, QVariant value)
 
 void Settings::setOption(int number, QColor color)
 {
-    if (this->colors.at(number).isValid()) {
+    if (this->colors.count() == Settings::ColorCount) {
         this->colors.replace(number, color);
     } else {
-        this->colors.insert(number, color);
+        this->colors.append(color);
     }
-//    qDebug() << this->colors.at(number) << number;
 }
 
 void Settings::setOption(QFont font)
 {
     this->font = font;
 }
-//void Settings::setupAtUi(SettingsDialog* sd)
-//{
-//    if (this->pSettingsMap.isEmpty())
-//    {
-//        this->setSettings(this->FromUi, sd);
-//        this->flush();
-//    }
-//    else
-//    {
-//        this->setSettings(this->OnUi, sd);
-//    }
-//}
-
-//void Settings::setTextColor(QColor color)
-//{
-//    this->color = color;
-//}
-
-//QColor Settings::getTextColor()
-//{
-//    if (!this->color.isValid())
-//    {
-//        this->color.setRgb(0,0,0);
-//    }
-
-//    return this->color;
-//}
-
-//void Settings::setFont(QFont font)
-//{
-//    this->font = font;
-//}
-
-//QFont Settings::getFont()
-//{
-//    if (this->font.family().isEmpty())
-//    {
-//        this->font.fromString(QString("Arial,14,-1,5,75,0,0,0,0,0"));
-//    }
-
-//    return this->font;
-//}
-
-//QMap<QString, QVariant>* Settings::getSettings()
-//{
-//    return &this->pSettingsMap;
-//}
 
 bool Settings::read()
 {
     this->file->open(QIODevice::ReadOnly);
-
     QDataStream stream(this->file);
 
     stream.setVersion(QDataStream::Qt_4_8);
     stream >> this->settings >> this->colors >> this->font;
 
-//    foreach (QString key, this->pSettingsMap.keys())
-//    {
-//        qDebug() << this->pSettingsMap.value(key);
-//    }
     this->file->close();
 
     if (stream.status() != QDataStream::Ok) {
@@ -125,75 +80,19 @@ bool Settings::read()
 void Settings::flush()
 {
     this->file->open(QIODevice::WriteOnly | QIODevice::Truncate);
-
     QDataStream stream(this->file);
 
     stream.setVersion(QDataStream::Qt_4_8);
     stream << this->settings << this->colors << this->font;
 
-//    foreach (QString key, this->pSettingsMap.keys())
-//    {
-//        qDebug() << this->pSettingsMap.value(key);
-//    }
-
-    if(stream.status() != QDataStream::Ok)
-    {
-        qDebug() << "Error at writing file";
+    if(stream.status() != QDataStream::Ok) {
+        QMessageBox::critical(0,
+                              tr("Error!"),
+                              tr("Can't write into the file ") + Settings::FileName);
+    } else {
+        this->file->flush();
     }
 
-    this->file->flush();
     this->file->close();
 }
 
-//void Settings::setSettings(int mode, SettingsDialog* sd)
-//{
-//    QObjectList List;
-//    QRegExp re("^(cb|hs)");
-//    QStringList reList;
-
-//    List = sd->children();
-
-//    for (int i=0; i < List.size();i++)
-//    {
-//        if (re.indexIn(List.at(i)->objectName()) == -1)
-//        {
-//            List.removeAt(i);
-//            i--;
-//        }
-//        else
-//        {
-//            re.indexIn(List.at(i)->objectName());
-//            reList = re.capturedTexts();
-
-//            if (reList.at(1) == QString("cb"))
-//            {
-//                if (mode == this->OnUi)
-//                {
-//                    ((QCheckBox* )List.at(i))->setChecked(this->pSettingsMap[List.at(i)->objectName()].toBool());
-//                    //qDebug() << List.at(i)->objectName() << this->pSettingsMap[List.at(i)->objectName()].toBool();
-//                }
-//                else
-//                {
-//                    this->pSettingsMap.insert(List.at(i)->objectName(), ((QCheckBox* )List.at(i))->isChecked());
-//                    //qDebug() << List.at(i)->objectName() << this->pSettingsMap[List.at(i)->objectName()].toBool();
-//                }
-//            }
-//            else
-//            {
-//                if (reList.at(1) == QString("hs"))
-//                {
-//                    if (mode == this->OnUi)
-//                    {
-//                        ((QSlider* )List.at(i))->setValue(this->pSettingsMap[List.at(i)->objectName()].toInt());
-//                        //qDebug() << List.at(i)->objectName() << this->pSettingsMap[List.at(i)->objectName()].toInt();
-//                    }
-//                    else
-//                    {
-//                        this->pSettingsMap.insert(List.at(i)->objectName(), ((QSlider* )List.at(i))->value());
-//                        //qDebug() << List.at(i)->objectName() << this->pSettingsMap[List.at(i)->objectName()].toInt();
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
