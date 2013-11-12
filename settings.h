@@ -3,7 +3,6 @@
 
 #include <QFile>
 #include <QMap>
-#include <QtGui>
 
 class Settings : public QObject
 {

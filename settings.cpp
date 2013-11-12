@@ -23,7 +23,6 @@ Settings* Settings::instance()
     if(!Settings::self) {
         Settings::self = new Settings();
     }
-
     return Settings::self;
 }
 

@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QLabel>
-//#include <QtGui>
+#include "gamemenu.h"
 #include "settingsdialog.h"
 
 
@@ -24,6 +24,7 @@ public:
 private:
     Ui::MainWindow *ui;
     SettingsDialog* pSettingsDialog;
+    GameMenu* pGameMenu;
 
 private slots:
     void openFile();

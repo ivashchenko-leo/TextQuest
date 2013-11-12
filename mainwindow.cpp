@@ -4,13 +4,13 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    pSettingsDialog(new SettingsDialog(this))
+    pSettingsDialog(new SettingsDialog(this)),
+  pGameMenu(new GameMenu(this))
 {
     ui->setupUi(this);
     connect(ui->pbOpen, SIGNAL(clicked()), this, SLOT(openFile()));
     connect(ui->pbExit, SIGNAL(clicked()), this, SLOT(exit()));
     connect(ui->pbSettings, SIGNAL(clicked()), this, SLOT(changeSettings()));
-
 
     if (!Settings::instance()->read()) {
         this->pSettingsDialog->setDefault();
@@ -27,13 +27,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::openFile()
 {
-    QString FileName;
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
 
-    FileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
-
-    if (!FileName.isEmpty())
-    {
-
+    if (!FileName.isEmpty()) {
+        this->hide();
+        this->pGameMenu->setFileName(fileName);
+        this->pGameMenu->exec();
+        this->setVisible(true);
     }
 }
 
@@ -45,9 +46,7 @@ void MainWindow::exit()
 void MainWindow::changeSettings()
 {
     this->hide();
-
     this->pSettingsDialog->exec();
-
     this->setVisible(true);
 }
 

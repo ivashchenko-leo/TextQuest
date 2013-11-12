@@ -6,11 +6,8 @@
 #include <QColorDialog>
 #include <QFont>
 #include <QFontDialog>
-#include <QRegExp>
 #include "settings.h"
-#include <QMouseEvent>
 #include <QMessageBox>
-//#include <QPoint>
 
 namespace Ui {
 class SettingsDialog;

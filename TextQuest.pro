@@ -15,11 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     settingsdialog.cpp \
-    settings.cpp
+    settings.cpp \
+    gamemenu.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
-    settings.h
+    settings.h \
+    gamemenu.h
 
 FORMS    += mainwindow.ui \
-    settings.ui
+    settings.ui \
+    gamemenu.ui
