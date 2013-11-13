@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui \
+        xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,13 +17,18 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     settingsdialog.cpp \
     settings.cpp \
-    gamemenu.cpp
+    gamemenu.cpp \
+    xmlchapters.cpp \
+    chaptersdialog.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
     settings.h \
-    gamemenu.h
+    gamemenu.h \
+    xmlchapters.h \
+    chaptersdialog.h
 
 FORMS    += mainwindow.ui \
     settings.ui \
-    gamemenu.ui
+    gamemenu.ui \
+    chaptersdialog.ui

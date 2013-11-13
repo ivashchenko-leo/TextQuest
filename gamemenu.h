@@ -2,6 +2,7 @@
 #define GAMEMENU_H
 
 #include <QDialog>
+#include <QtXml>
 
 namespace Ui {
 class GameMenu;
