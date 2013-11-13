@@ -1,8 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <QFile>
-#include <QMap>
+#include <QtGui>
 
 class Settings : public QObject
 {

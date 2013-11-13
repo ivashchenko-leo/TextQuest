@@ -7,10 +7,10 @@ GameMenu::GameMenu(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->pbBack, SIGNAL(clicked()), SLOT(close());
-    connect(ui->pbNewGame, SIGNAL(clicked()), SLOT(newGame());
-    connect(ui->pbChapters, SIGNAL(clicked()), SLOT(chapters());
-    connect(ui->pbLoad, SIGNAL(clicked()), SLOT(loadMenu());
+    connect(ui->pbBack, SIGNAL(clicked()), SLOT(close()));
+    connect(ui->pbNewGame, SIGNAL(clicked()), SLOT(newGame()));
+    connect(ui->pbChapters, SIGNAL(clicked()), SLOT(chapters()));
+    connect(ui->pbLoad, SIGNAL(clicked()), SLOT(loadMenu()));
 }
 
 GameMenu::~GameMenu()

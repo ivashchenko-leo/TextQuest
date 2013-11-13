@@ -30,7 +30,7 @@ void MainWindow::openFile()
     QString fileName;
     fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
 
-    if (!FileName.isEmpty()) {
+    if (!fileName.isEmpty()) {
         this->hide();
         this->pGameMenu->setFileName(fileName);
         this->pGameMenu->exec();

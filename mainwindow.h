@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
-#include <QLabel>
 #include "gamemenu.h"
 #include "settingsdialog.h"
 
