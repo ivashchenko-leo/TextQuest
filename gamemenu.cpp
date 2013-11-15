@@ -1,9 +1,22 @@
 #include "gamemenu.h"
 #include "ui_gamemenu.h"
 
+const QString GameMenu::GameTag("game");
+const QString GameMenu::ChapterTag("chapter");
+const QString GameMenu::SceneTag("scene");
+const QString GameMenu::ImageTag("image");
+const QString GameMenu::SoundTag("sound");
+const QString GameMenu::IconTag("icon");
+const QString GameMenu::PTag("p");
+const QString GameMenu::FileTag("file");
+const QString GameMenu::ChoiceTag("choice");
+const QString GameMenu::MenuImgTag("menuimg");
+const QString GameMenu::MenuSoundTag("menusound");
+
 GameMenu::GameMenu(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::GameMenu)
+    ui(new Ui::GameMenu),
+    handler(new XmlChapters())
 {
     ui->setupUi(this);
 
@@ -38,7 +51,24 @@ void GameMenu::loadMenu()
 
 }
 
+void GameMenu::loadTree()
+{
+    QFile file(this->fileName);
+    QXmlInputSource source(&file);
+
+    if (this->fileName.isEmpty()) {
+        qDebug() << "property fileName is empty";
+    } else {
+        this->reader.setContentHandler(this->handler);
+        this->reader.parse(source);
+    }
+}
+
 void GameMenu::chapters()
 {
+    QFile file(this->fileName);
+    QXmlInputSource source(&file);
 
+    reader.setContentHandler(this->handler);
+    reader.parse(source);
 }

@@ -31,10 +31,9 @@ void MainWindow::openFile()
     fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
 
     if (!fileName.isEmpty()) {
-        this->hide();
         this->pGameMenu->setFileName(fileName);
+        this->pGameMenu->loadTree();
         this->pGameMenu->exec();
-        this->setVisible(true);
     }
 }
 
@@ -45,8 +44,6 @@ void MainWindow::exit()
 
 void MainWindow::changeSettings()
 {
-    this->hide();
     this->pSettingsDialog->exec();
-    this->setVisible(true);
 }
 
