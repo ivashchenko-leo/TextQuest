@@ -3,12 +3,15 @@
 
 #include <QDialog>
 #include <QtXml>
-#include "xmlchapters.h"
+//#include "xmlchapters.h"
+#include "xmldom.h"
+#include <QMessageBox>
 
 namespace Ui {
 class GameMenu;
 }
-class XmlChapters;
+//class XmlChapters;
+class XmlDom;
 
 class GameMenu : public QDialog
 {
@@ -17,10 +20,8 @@ class GameMenu : public QDialog
 public:
     explicit GameMenu(QWidget *parent = 0);
     ~GameMenu();
-    QString fileName;
-    void setFileName(QString fileName);
-    QString getFileName();
-    void loadTree();
+    //void loadTree(QFile *file);
+    void loadXml(QString fileName);
 
     const static QString GameTag;
     const static QString ChapterTag;
@@ -36,13 +37,16 @@ public:
 
 private:
     Ui::GameMenu *ui;
-    QXmlSimpleReader reader;
-    XmlChapters *handler;
+    XmlDom *xmlDoc;
+    //QXmlSimpleReader reader;
+    //QStack<QFile> filesStack;
+    //void parseXml();
 
 private slots:
     void chapters();
     void loadMenu();
     void newGame();
+    //void getNewFile(QFile file);
 
 };
 

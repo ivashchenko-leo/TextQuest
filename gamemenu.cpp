@@ -16,7 +16,7 @@ const QString GameMenu::MenuSoundTag("menusound");
 GameMenu::GameMenu(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::GameMenu),
-    handler(new XmlChapters())
+    xmlDoc(new XmlDom())
 {
     ui->setupUi(this);
 
@@ -24,21 +24,12 @@ GameMenu::GameMenu(QWidget *parent) :
     connect(ui->pbNewGame, SIGNAL(clicked()), SLOT(newGame()));
     connect(ui->pbChapters, SIGNAL(clicked()), SLOT(chapters()));
     connect(ui->pbLoad, SIGNAL(clicked()), SLOT(loadMenu()));
+    //connect(this->handler, SIGNAL(newFile(QFile)), SLOT(getNewFile(QFile)));
 }
 
 GameMenu::~GameMenu()
 {
     delete ui;
-}
-
-void GameMenu::setFileName(QString fileName)
-{
-    this->fileName = fileName;
-}
-
-QString GameMenu::getFileName()
-{
-    return this->fileName;
 }
 
 void GameMenu::newGame()
@@ -50,25 +41,61 @@ void GameMenu::loadMenu()
 {
 
 }
+/*
+void GameMenu::loadTree(QFile *file)
+{
+    this->parseXml(file);
+}
 
 void GameMenu::loadTree()
 {
-    QFile file(this->fileName);
-    QXmlInputSource source(&file);
+    QFile file(this->mainFile);
+    this->parseXml(&file);
+}
 
-    if (this->fileName.isEmpty()) {
-        qDebug() << "property fileName is empty";
+void GameMenu::parseXml(QFile *file)
+{
+    QXmlInputSource source(file);
+
+    if (this->mainFile.isEmpty()) {
+        qDebug() << "GameMenu: property fileName is empty";
     } else {
         this->reader.setContentHandler(this->handler);
         this->reader.parse(source);
     }
+}*/
+void GameMenu::loadXml(QString fileName)
+{
+    QDomDocument domDoc;
+
+    QFile file(fileName);
+
+    if (file.open(QIODevice::ReadOnly)) {
+        if (domDoc.setContent(&file)) {
+            QDomElement domElement = domDoc.documentElement();
+            if (domElement.tagName() != GameMenu::GameTag) {
+                QMessageBox::critical(this, tr("Erorr!"), tr("This file is not TextQuest game xml file."));
+            } else {
+                this->setToolTip(domElement.attribute("name"));
+                qDebug() << domElement.attribute("name");
+            }
+            this->xmlDoc->setGameElement(domElement);
+        }
+    }
 }
+
+//void GameMenu::getNewFile(QFile file)
+//{
+//    if (!this->filesStack.contains(file)) {
+//       this->filesStack.push(file);
+//    }
+//}
 
 void GameMenu::chapters()
 {
-    QFile file(this->fileName);
-    QXmlInputSource source(&file);
+//    QFile file(this->mainFile);
+//    QXmlInputSource source(&file);
 
-    reader.setContentHandler(this->handler);
-    reader.parse(source);
+//    reader.setContentHandler(this->handler);
+//    reader.parse(source);
 }

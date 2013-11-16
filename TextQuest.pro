@@ -18,15 +18,17 @@ SOURCES += main.cpp\
     settingsdialog.cpp \
     settings.cpp \
     gamemenu.cpp \
-    xmlchapters.cpp \
-    chaptersdialog.cpp
+    #xmlchapters.cpp \
+    chaptersdialog.cpp \
+    xmldom.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
     settings.h \
     gamemenu.h \
-    xmlchapters.h \
-    chaptersdialog.h
+    #xmlchapters.h \
+    chaptersdialog.h \
+    xmldom.h
 
 FORMS    += mainwindow.ui \
     settings.ui \

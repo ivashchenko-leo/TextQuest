@@ -31,8 +31,7 @@ void MainWindow::openFile()
     fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
 
     if (!fileName.isEmpty()) {
-        this->pGameMenu->setFileName(fileName);
-        this->pGameMenu->loadTree();
+        this->pGameMenu->loadXml(fileName);
         this->pGameMenu->exec();
     }
 }
