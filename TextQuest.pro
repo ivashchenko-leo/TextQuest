@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     gamemenu.cpp \
     #xmlchapters.cpp \
     chaptersdialog.cpp \
-    xmldom.cpp
+    xmldom.cpp \
+    gamewindow.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -28,9 +29,11 @@ HEADERS  += mainwindow.h \
     gamemenu.h \
     #xmlchapters.h \
     chaptersdialog.h \
-    xmldom.h
+    xmldom.h \
+    gamewindow.h
 
 FORMS    += mainwindow.ui \
     settings.ui \
     gamemenu.ui \
-    chaptersdialog.ui
+    chaptersdialog.ui \
+    gamewindow.ui

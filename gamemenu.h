@@ -35,9 +35,11 @@ public:
     const static QString MenuImgTag;
     const static QString MenuSoundTag;
 
+    XmlDom *xmlDoc;
+
 private:
     Ui::GameMenu *ui;
-    XmlDom *xmlDoc;
+
     //QXmlSimpleReader reader;
     //QStack<QFile> filesStack;
     //void parseXml();
