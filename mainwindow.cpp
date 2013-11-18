@@ -27,8 +27,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::openFile()
 {
-    QString fileName;
-    fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
+    QString fileName = "C:/Documents and Settings/Admin/Qt projects/TextQuest/example.xml";
+    //fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
 
     if (!fileName.isEmpty()) {
         this->pGameMenu->loadXml(fileName);
