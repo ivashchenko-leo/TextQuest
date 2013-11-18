@@ -6,6 +6,7 @@
 //#include "xmlchapters.h"
 #include "xmldom.h"
 #include <QMessageBox>
+#include "gamewindow.h"
 
 namespace Ui {
 class GameMenu;
@@ -39,7 +40,7 @@ public:
 
 private:
     Ui::GameMenu *ui;
-
+    QString gameName;
     //QXmlSimpleReader reader;
     //QStack<QFile> filesStack;
     //void parseXml();

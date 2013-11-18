@@ -1,4 +1,4 @@
-#include "gamemenu.h"
+﻿#include "gamemenu.h"
 #include "ui_gamemenu.h"
 
 const QString GameMenu::GameTag("game");
@@ -15,8 +15,8 @@ const QString GameMenu::MenuSoundTag("menusound");
 
 GameMenu::GameMenu(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::GameMenu),
-    xmlDoc(new XmlDom())
+    xmlDoc(new XmlDom()),
+    ui(new Ui::GameMenu)
 {
     ui->setupUi(this);
 
@@ -34,7 +34,11 @@ GameMenu::~GameMenu()
 
 void GameMenu::newGame()
 {
-
+    GameWindow gameWindow(this, this->xmlDoc);
+    //this->hide();
+    gameWindow.setToolTip(this->gameName);
+    gameWindow.start();
+    gameWindow.exec();
 }
 
 void GameMenu::loadMenu()
@@ -76,8 +80,9 @@ void GameMenu::loadXml(QString fileName)
             if (domElement.tagName() != GameMenu::GameTag) {
                 QMessageBox::critical(this, tr("Erorr!"), tr("This file is not TextQuest game xml file."));
             } else {
+                this->gameName = domElement.attribute("name");
                 this->setToolTip(domElement.attribute("name"));
-                qDebug() << domElement.attribute("name");
+                //qDebug() << domElement.attribute("name");
             }
             this->xmlDoc->setGameElement(domElement);
         }
