@@ -45,7 +45,7 @@
    <string>Settings</string>
   </property>
   <property name="locale">
-   <locale language="English" country="UnitedStates"/>
+   <locale language="Russian" country="RussianFederation"/>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -81,12 +81,12 @@
     <rect>
      <x>20</x>
      <y>10</y>
-     <width>81</width>
+     <width>111</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Text speed</string>
+    <string>Скорость текста</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">
@@ -94,12 +94,12 @@
     <rect>
      <x>260</x>
      <y>160</y>
-     <width>101</width>
+     <width>131</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Auto-read mode</string>
+    <string>Режим авто-чтения</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -112,7 +112,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Text color one</string>
+    <string>Цвет текста 1</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
@@ -125,7 +125,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Continue skip the text after choice</string>
+    <string>Пропускать текст после выбора</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_6">
@@ -133,12 +133,12 @@
     <rect>
      <x>20</x>
      <y>110</y>
-     <width>121</width>
+     <width>141</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Text transparency</string>
+    <string>Прозрачность текста</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="cbFullScreen">
@@ -164,7 +164,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Full screen mode</string>
+    <string>Полный экран</string>
    </property>
   </widget>
   <widget class="QToolButton" name="tbColor1">
@@ -177,7 +177,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Change</string>
+    <string>Изменить</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="cbSkipAfterChoice">
@@ -224,12 +224,12 @@
     <rect>
      <x>260</x>
      <y>10</y>
-     <width>111</width>
+     <width>221</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Skip unread text</string>
+    <string>Пропускать непрочитанный текст</string>
    </property>
   </widget>
   <widget class="QSlider" name="hsSpeed">
@@ -248,10 +248,13 @@
     <number>100</number>
    </property>
    <property name="value">
-    <number>30</number>
+    <number>1</number>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="invertedAppearance">
+    <bool>true</bool>
    </property>
    <property name="tickPosition">
     <enum>QSlider::TicksBelow</enum>
@@ -292,7 +295,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Sound</string>
+    <string>Звук</string>
    </property>
   </widget>
   <widget class="Line" name="line_2">
@@ -332,12 +335,12 @@
     <rect>
      <x>20</x>
      <y>310</y>
-     <width>46</width>
-     <height>13</height>
+     <width>71</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Volume</string>
+    <string>Громкость</string>
    </property>
   </widget>
   <widget class="QSlider" name="hsVolume">
@@ -375,7 +378,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Background brightness</string>
+    <string>Яркость фона</string>
    </property>
   </widget>
   <widget class="QSlider" name="hsBrightness">
@@ -413,20 +416,20 @@
     </rect>
    </property>
    <property name="text">
-    <string>Change</string>
+    <string>Изменить</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_11">
    <property name="geometry">
     <rect>
-     <x>100</x>
+     <x>80</x>
      <y>60</y>
      <width>81</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Font</string>
+    <string>Шрифт</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_12">
@@ -439,7 +442,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Text color two</string>
+    <string>Цвет текста 2</string>
    </property>
   </widget>
   <widget class="QToolButton" name="tbColor2">
@@ -452,7 +455,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Change</string>
+    <string>Изменить</string>
    </property>
   </widget>
  </widget>

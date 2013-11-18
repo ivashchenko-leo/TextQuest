@@ -37,9 +37,9 @@
    <bool>false</bool>
   </property>
   <property name="locale">
-   <locale language="English" country="UnitedStates"/>
+   <locale language="Russian" country="RussianFederation"/>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>260</x>
@@ -55,7 +55,7 @@
     <item>
      <widget class="QPushButton" name="pbNewGame">
       <property name="text">
-       <string>New game</string>
+       <string>Новая игра</string>
       </property>
      </widget>
     </item>
@@ -65,21 +65,21 @@
        <set>Qt::ImhNone</set>
       </property>
       <property name="text">
-       <string>Load</string>
+       <string>Загрузить</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="pbChapters">
       <property name="text">
-       <string>Chapters</string>
+       <string>Главы</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="pbBack">
       <property name="text">
-       <string>Back</string>
+       <string>Назад</string>
       </property>
      </widget>
     </item>

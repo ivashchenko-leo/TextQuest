@@ -52,7 +52,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Open</string>
+     <string>Открыть</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbExit">
@@ -64,8 +64,11 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="locale">
+     <locale language="Russian" country="RussianFederation"/>
+    </property>
     <property name="text">
-     <string>Exit</string>
+     <string>Выход</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbSettings">
@@ -78,7 +81,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Settings</string>
+     <string>Настройки</string>
     </property>
    </widget>
   </widget>

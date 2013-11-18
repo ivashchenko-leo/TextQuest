@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     #xmlchapters.cpp \
     chaptersdialog.cpp \
     xmldom.cpp \
-    gamewindow.cpp
+    gamewindow.cpp \
+    mousefilter.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -30,7 +31,8 @@ HEADERS  += mainwindow.h \
     #xmlchapters.h \
     chaptersdialog.h \
     xmldom.h \
-    gamewindow.h
+    gamewindow.h \
+    mousefilter.h
 
 FORMS    += mainwindow.ui \
     settings.ui \
