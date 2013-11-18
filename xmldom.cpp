@@ -1,4 +1,6 @@
-#include "xmldom.h"
+﻿#include "xmldom.h"
+
+//P = Paragraph
 
 XmlDom::XmlDom(QObject *parent) :
     QObject(parent)
@@ -26,28 +28,10 @@ QDomNodeList XmlDom::getSceneList(const QString chapterName)
     return empty;
 }
 
-QDomNode XmlDom::getNextChapter(QDomNode chapter)
-{
-    return this->getNextChapter(chapter.toElement().attribute("name"));
-}
-
-QDomNode XmlDom::getNextChapter(const QString chapterName)
-{
-    QDomNode empty;
-    for (int i = 0; i < this->chapterList.size(); i++) {
-        if (this->chapterList.at(i).toElement().attribute("name") == chapterName) {
-            if (i+1 <= this->chapterList.size())
-                return this->chapterList.at(i+1);
-        }
-    }
-    return empty;
-}
-
 QDomNode XmlDom::getScene(const QString id)
 {
-    QDomNode empty;
     QDomNodeList sceneList;
-
+    QDomNode empty;
     for (int i = 0; i < this->chapterList.size(); i++) {
         sceneList = this->chapterList.at(i).toElement().elementsByTagName(GameMenu::SceneTag);
         for (int j = 0; j < sceneList.size(); j++) {
@@ -59,26 +43,58 @@ QDomNode XmlDom::getScene(const QString id)
     return empty;
 }
 
-QDomNode XmlDom::getNextScene(const QString id)
+QDomNode XmlDom::getScene(QDomNode chapter, int sceneNumber)
 {
-    QDomNode empty;
+    QDomNodeList sceneList;
+
+    sceneList = chapter.toElement().elementsByTagName(GameMenu::SceneTag);
+    return sceneList.at(sceneNumber);
+}
+
+bool XmlDom::isSceneExist(const QString id)
+{
     QDomNodeList sceneList;
 
     for (int i = 0; i < this->chapterList.size(); i++) {
         sceneList = this->chapterList.at(i).toElement().elementsByTagName(GameMenu::SceneTag);
         for (int j = 0; j < sceneList.size(); j++) {
             if (sceneList.at(j).toElement().attribute("id") == id) {
-                if (j+1 <= sceneList.size())
-                    return sceneList.at(j+1);
+                return true;
             }
         }
     }
-    return empty;
+    return false;
 }
 
-QDomNode XmlDom::getNextScene(QDomNode scene)
+bool XmlDom::isSceneExist(QDomNode chapter, int sceneNumber)
 {
-    return this->getNextScene(scene.toElement().attribute("id"));
+    QDomNode scene;
+    scene = this->getScene(chapter, sceneNumber);
+    if (scene.isNull())
+        return false;
+    else
+        return true;
+}
+
+bool XmlDom::isChapterExist(const int chapterNumber)
+{
+    if (this->getChapter(chapterNumber).isNull())
+        return false;
+    else
+        return true;
+}
+
+bool XmlDom::isChapterExist(const QString chapterName)
+{
+    if (this->getChapter(chapterName).isNull())
+        return false;
+    else
+        return true;
+}
+
+QDomNode XmlDom::getChapter(const int chapterNumber)
+{
+    return this->chapterList.at(chapterNumber);
 }
 
 QDomNode XmlDom::getChapter(const QString chapterName)
@@ -143,10 +159,28 @@ QDomNodeList XmlDom::getChoiceList(QDomNode scene)
     return scene.toElement().elementsByTagName(GameMenu::ChoiceTag);
 }
 
+QString XmlDom::getFirstChapter()
+{
+    return this->chapterList.at(0).toElement().attribute("name");
+}
 
+bool XmlDom::isPExist(QDomNode scene, int pNumber)
+{
+    QDomNodeList list;
+    list = this->getPList(scene);
+    if (pNumber >= list.size() || pNumber < 0) {
+        return false;
+    }
+    return true;
+}
 
+QDomNode XmlDom::getP(QDomNode scene, int pNumber)
+{
+    QDomNodeList list;
+    list = this->getPList(scene);
 
-
+    return list.at(pNumber);
+}
 
 
 
