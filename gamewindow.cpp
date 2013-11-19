@@ -9,6 +9,10 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     ui->setupUi(this);
     this->xmlDoc = xmlDoc;
     this->cCount = 0;
+    this->choiceNotExist = true;
+    this->sCount = 0;
+    this->chapter = 0;
+    this->tCount = 0;
     this->ui->textBrowser->viewport()->installEventFilter(new MouseFilter(this->ui->textBrowser, this));
     connect(this->pTimer, SIGNAL(timeout()), SLOT(showChars()));
 }
@@ -39,6 +43,7 @@ void GameWindow::showChars()
 void GameWindow::showChoices()
 {
     QDomNodeList list;
+    this->choiceNotExist = false;
     list = this->xmlDoc->getChoiceList(this->scene);
     for (int i = 0; i < list.size(); i++) {
         QPushButton *button = new QPushButton(list.at(i).toElement().text(), this);
@@ -53,11 +58,8 @@ void GameWindow::setScene(QDomNode scene)
 
 void GameWindow::start()
 {
-    this->sCount = 0;
-    this->chapter = 0;
-    this->pCount = 0;
     this->scene = this->xmlDoc->getScene(this->xmlDoc->getChapter(this->chapter), this->sCount);
-    this->showParagraph(this->xmlDoc->getP(this->scene, this->pCount));
+    this->chooseAction(this->xmlDoc->getSceneElement(this->scene, this->tCount));
 }
 /*
 void GameWindow::mousePressEvent(QMouseEvent *mouse)
@@ -68,8 +70,8 @@ void GameWindow::mousePressEvent(QMouseEvent *mouse)
             this->pTimer->stop();
             this->finishParagraph();
         } else {
-            this->pCount++;
-            this->showParagraph(this->pCount);
+            this->tCount++;
+            this->showParagraph(this->tCount);
         }
     }
 }
@@ -87,7 +89,27 @@ void GameWindow::setScene()
     this->scene = this->xmlDoc->getScene(this->xmlDoc->getChapter(this->chapter),this->sCount);
 }
 
-
+void GameWindow::chooseAction(QDomNode node)
+{
+    qDebug () << node.toElement().tagName();
+    if (node.toElement().tagName() == GameMenu::PTag) {
+        this->showParagraph(node);
+    } else {
+        if (node.toElement().tagName() == GameMenu::ImageTag) {
+            qDebug() << "Image tag!";
+        } else {
+            if (node.toElement().tagName() == GameMenu::SoundTag) {
+                qDebug() << "Sound tag!";
+            } else {
+                if (node.toElement().tagName() == GameMenu::ChoiceTag) {
+                    this->showChoices();
+                } else {
+                    qDebug() << "Unexpected tag!";
+                }
+            }
+        }
+    }
+}
 
 
 

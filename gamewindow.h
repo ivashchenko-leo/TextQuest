@@ -21,25 +21,27 @@ public:
     explicit GameWindow(QWidget *parent = 0, XmlDom *xmlDoc = 0);
     ~GameWindow();
     void setScene(QDomNode scene);
-    void showChoices();
-    void showParagraph(QDomNode paragraph);
+    void chooseAction(QDomNode node);
     void start();
     QTimer *pTimer;
-    int pCount;
+    int tCount;
     int cCount;
     int sCount;
-    QString pText;
     void finishParagraph();
     XmlDom *xmlDoc;
     void setScene();
     QDomNode scene;
     int chapter;
+    bool choiceNotExist;
 
 protected:
     //void mousePressEvent(QMouseEvent *mouse);
 
 private:
     Ui::GameWindow *ui;
+    QString pText;
+    void showParagraph(QDomNode paragraph);
+    void showChoices();
 
 private slots:
     void showChars();
