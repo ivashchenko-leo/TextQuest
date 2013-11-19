@@ -132,23 +132,6 @@ QString XmlDom::getChapterIcon(QDomNode chapter)
     return list.at(list.size()).toElement().text();
 }
 
-QString XmlDom::getSceneImage(QDomNode scene)
-{
-    QDomNodeList list;
-    list = scene.toElement().elementsByTagName(GameMenu::ImageTag);
-
-    return list.at(list.size()).toElement().text();
-}
-
-QString XmlDom::getSceneSound(QDomNode scene)
-{
-    QDomNodeList list;
-    list = scene.toElement().elementsByTagName(GameMenu::SoundTag);
-
-    return list.at(list.size()).toElement().text();
-}
-
-
 QDomNodeList XmlDom::getPList(QDomNode scene)
 {
     return scene.toElement().elementsByTagName(GameMenu::PTag);
@@ -182,7 +165,21 @@ QDomNode XmlDom::getP(QDomNode scene, int pNumber)
     return list.at(pNumber);
 }
 
+QDomNode XmlDom::getSceneElement(QDomNode scene, int pNumber)
+{
+    QDomNodeList list;
+    list = scene.toElement().childNodes();
 
+    return list.at(pNumber);
+}
+
+bool XmlDom::isElementExist(QDomNode scene, int pNumber)
+{
+    if (scene.toElement().childNodes().size() <= pNumber || pNumber < 0) {
+        return false;
+    }
+    return true;
+}
 
 
 
