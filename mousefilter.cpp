@@ -15,26 +15,29 @@ bool MouseFilter::eventFilter(QObject *, QEvent *event)
                 this->gameWindow->pTimer->stop();
                 this->gameWindow->finishParagraph();
             } else {
-                this->gameWindow->pCount++;
-                if (!this->gameWindow->xmlDoc->isPExist(this->gameWindow->scene, this->gameWindow->pCount)) {
-                    this->gameWindow->sCount++;
-                    if (!this->gameWindow->xmlDoc->isSceneExist(
-                                this->gameWindow->xmlDoc->getChapter(this->gameWindow->chapter),
-                                this->gameWindow->sCount)
-                            ) {
-                        this->gameWindow->chapter++;
-                        if (!this->gameWindow->xmlDoc->isChapterExist(this->gameWindow->chapter)) {
-                            return false;
+                if (this->gameWindow->choiceNotExist) {
+                    qDebug() << this->gameWindow->choiceNotExist;
+                    this->gameWindow->tCount++;
+                    if (!this->gameWindow->xmlDoc->isElementExist(this->gameWindow->scene, this->gameWindow->tCount)) {
+                        this->gameWindow->sCount++;
+                        if (!this->gameWindow->xmlDoc->isSceneExist(
+                                    this->gameWindow->xmlDoc->getChapter(this->gameWindow->chapter),
+                                    this->gameWindow->sCount)
+                                ) {
+                            this->gameWindow->chapter++;
+                            if (!this->gameWindow->xmlDoc->isChapterExist(this->gameWindow->chapter)) {
+                                return false;
+                            }
+                            this->gameWindow->sCount = 0;
                         }
-                        this->gameWindow->sCount = 0;
+                        this->gameWindow->setScene();
+                        this->gameWindow->tCount = 0;
                     }
-                    this->gameWindow->setScene();
-                    this->gameWindow->pCount = 0;
+                    this->gameWindow->chooseAction(this->gameWindow->xmlDoc->getSceneElement(
+                                                       this->gameWindow->scene,
+                                                       this->gameWindow->tCount)
+                                                   );
                 }
-                this->gameWindow->showParagraph(
-                            this->gameWindow->xmlDoc->getP(this->gameWindow->scene,
-                                                           this->gameWindow->pCount)
-                            );
             }
             return true;
         }
