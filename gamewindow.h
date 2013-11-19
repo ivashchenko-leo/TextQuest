@@ -26,13 +26,14 @@ public:
     QTimer *pTimer;
     int tCount;
     int cCount;
-    int sCount;
+    QString sceneId;
     void finishParagraph();
     XmlDom *xmlDoc;
     void setScene();
     QDomNode scene;
     int chapter;
     bool choiceNotExist;
+    void setChapter();
 
 protected:
     //void mousePressEvent(QMouseEvent *mouse);
@@ -42,6 +43,9 @@ private:
     QString pText;
     void showParagraph(QDomNode paragraph);
     void showChoices();
+    void showImage(QDomNode image);
+    void playSound(QDomNode sound);
+    void sendLeftClick();
 
 private slots:
     void showChars();

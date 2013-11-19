@@ -3,14 +3,14 @@
 
 GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     QDialog(parent),
-    ui(new Ui::GameWindow),
-    pTimer(new QTimer(this))
+    pTimer(new QTimer(this)),
+    ui(new Ui::GameWindow)
 {
     ui->setupUi(this);
     this->xmlDoc = xmlDoc;
     this->cCount = 0;
     this->choiceNotExist = true;
-    this->sCount = 0;
+    this->sceneId = "1";
     this->chapter = 0;
     this->tCount = 0;
     this->ui->textBrowser->viewport()->installEventFilter(new MouseFilter(this->ui->textBrowser, this));
@@ -45,6 +45,7 @@ void GameWindow::showChoices()
     QDomNodeList list;
     this->choiceNotExist = false;
     list = this->xmlDoc->getChoiceList(this->scene);
+    this->tCount = 0;
     for (int i = 0; i < list.size(); i++) {
         QPushButton *button = new QPushButton(list.at(i).toElement().text(), this);
         button->show();
@@ -58,7 +59,7 @@ void GameWindow::setScene(QDomNode scene)
 
 void GameWindow::start()
 {
-    this->scene = this->xmlDoc->getScene(this->xmlDoc->getChapter(this->chapter), this->sCount);
+    this->scene = this->xmlDoc->getScene(this->sceneId);
     this->chooseAction(this->xmlDoc->getSceneElement(this->scene, this->tCount));
 }
 /*
@@ -86,7 +87,7 @@ void GameWindow::finishParagraph()
 
 void GameWindow::setScene()
 {
-    this->scene = this->xmlDoc->getScene(this->xmlDoc->getChapter(this->chapter),this->sCount);
+    this->scene = this->xmlDoc->getScene(this->sceneId);
 }
 
 void GameWindow::chooseAction(QDomNode node)
@@ -96,22 +97,47 @@ void GameWindow::chooseAction(QDomNode node)
         this->showParagraph(node);
     } else {
         if (node.toElement().tagName() == GameMenu::ImageTag) {
-            qDebug() << "Image tag!";
+            this->showImage(node);
         } else {
             if (node.toElement().tagName() == GameMenu::SoundTag) {
-                qDebug() << "Sound tag!";
+                this->playSound(node);
             } else {
                 if (node.toElement().tagName() == GameMenu::ChoiceTag) {
                     this->showChoices();
                 } else {
-                    qDebug() << "Unexpected tag!";
+                    this->sendLeftClick();
+                    qDebug() << "Unexpected tag! " << node.toElement().tagName();
                 }
             }
         }
     }
 }
 
+void GameWindow::showImage(QDomNode image)
+{
+    this->sendLeftClick();
+}
 
+void GameWindow::playSound(QDomNode sound)
+{
+    this->sendLeftClick();
+}
+
+void GameWindow::setChapter()
+{
+    this->chapter = this->xmlDoc->getChapter(this->sceneId);
+}
+
+void GameWindow::sendLeftClick()
+{
+    QPoint point;
+    point.setX(this->ui->textBrowser->size().width()/2);
+    point.setY(this->ui->textBrowser->size().height()/2);
+
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, point,
+                                         Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
+    qApp->sendEvent(this->ui->textBrowser->viewport(), event);
+}
 
 
 

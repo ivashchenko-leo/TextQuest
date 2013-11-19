@@ -19,18 +19,13 @@ bool MouseFilter::eventFilter(QObject *, QEvent *event)
                     qDebug() << this->gameWindow->choiceNotExist;
                     this->gameWindow->tCount++;
                     if (!this->gameWindow->xmlDoc->isElementExist(this->gameWindow->scene, this->gameWindow->tCount)) {
-                        this->gameWindow->sCount++;
-                        if (!this->gameWindow->xmlDoc->isSceneExist(
-                                    this->gameWindow->xmlDoc->getChapter(this->gameWindow->chapter),
-                                    this->gameWindow->sCount)
-                                ) {
-                            this->gameWindow->chapter++;
-                            if (!this->gameWindow->xmlDoc->isChapterExist(this->gameWindow->chapter)) {
-                                return false;
-                            }
-                            this->gameWindow->sCount = 0;
+                        this->gameWindow->sceneId = QString::number(this->gameWindow->sceneId.toInt() + 1);
+                        qDebug() << this->gameWindow->sceneId;
+                        if (!this->gameWindow->xmlDoc->isSceneExist(this->gameWindow->sceneId)) {
+                            return false;
                         }
                         this->gameWindow->setScene();
+                        this->gameWindow->setChapter();
                         this->gameWindow->tCount = 0;
                     }
                     this->gameWindow->chooseAction(this->gameWindow->xmlDoc->getSceneElement(
