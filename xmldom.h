@@ -16,8 +16,8 @@ public:
     QDomNodeList getSceneList(const QString chapterName);
     QDomNode getScene(const QString id);
     QDomNode getScene(QDomNode chapter, int sceneNumber);
-    QDomNode getChapter(const QString chapterName);
     QDomNode getChapter(const int chapterNumber);
+    int getChapter(QString sceneId);
     QDomNode getP(QDomNode scene, int pNumber);
     QDomNode getSceneElement(QDomNode scene, int pNumber);
     QDomNodeList getPList(QDomNode scene);
@@ -29,13 +29,11 @@ public:
     bool isPExist(QDomNode scene, int pNumber);
     bool isSceneExist(QDomNode chapter, int sceneNumber);
     bool isSceneExist(const QString id);
-    bool isChapterExist(const QString chapterName);
     bool isChapterExist(const int chapterNumber);
     bool isElementExist(QDomNode scene, int pNumber);
 
 private:
     QDomElement domElement;
-    QDomNodeList chapterList;
 
 };
 

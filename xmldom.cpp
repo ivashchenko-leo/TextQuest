@@ -10,20 +10,19 @@ XmlDom::XmlDom(QObject *parent) :
 void XmlDom::setGameElement(const QDomElement element)
 {
     this->domElement = element;
-    this->chapterList = element.elementsByTagName(GameMenu::ChapterTag);
 }
 
 QDomNodeList XmlDom::getChaptersList()
 {
-    return this->chapterList;
+    return this->domElement.elementsByTagName(GameMenu::ChapterTag);
 }
 
 QDomNodeList XmlDom::getSceneList(const QString chapterName)
 {
     QDomNodeList empty;
-    for (int i = 0; i < this->chapterList.size(); i++) {
-        if (this->chapterList.at(i).toElement().attribute("name") == chapterName)
-            return this->chapterList.at(i).toElement().elementsByTagName(GameMenu::SceneTag);
+    for (int i = 0; i < this->domElement.elementsByTagName(GameMenu::ChapterTag).size(); i++) {
+        if (this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().attribute("name") == chapterName)
+            return this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().elementsByTagName(GameMenu::SceneTag);
     }
     return empty;
 }
@@ -32,8 +31,8 @@ QDomNode XmlDom::getScene(const QString id)
 {
     QDomNodeList sceneList;
     QDomNode empty;
-    for (int i = 0; i < this->chapterList.size(); i++) {
-        sceneList = this->chapterList.at(i).toElement().elementsByTagName(GameMenu::SceneTag);
+    for (int i = 0; i < this->domElement.elementsByTagName(GameMenu::ChapterTag).size(); i++) {
+        sceneList = this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().elementsByTagName(GameMenu::SceneTag);
         for (int j = 0; j < sceneList.size(); j++) {
             if (sceneList.at(j).toElement().attribute("id") == id) {
                 return sceneList.at(j);
@@ -55,8 +54,8 @@ bool XmlDom::isSceneExist(const QString id)
 {
     QDomNodeList sceneList;
 
-    for (int i = 0; i < this->chapterList.size(); i++) {
-        sceneList = this->chapterList.at(i).toElement().elementsByTagName(GameMenu::SceneTag);
+    for (int i = 0; i < this->domElement.elementsByTagName(GameMenu::ChapterTag).size(); i++) {
+        sceneList = this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().elementsByTagName(GameMenu::SceneTag);
         for (int j = 0; j < sceneList.size(); j++) {
             if (sceneList.at(j).toElement().attribute("id") == id) {
                 return true;
@@ -84,28 +83,9 @@ bool XmlDom::isChapterExist(const int chapterNumber)
         return true;
 }
 
-bool XmlDom::isChapterExist(const QString chapterName)
-{
-    if (this->getChapter(chapterName).isNull())
-        return false;
-    else
-        return true;
-}
-
 QDomNode XmlDom::getChapter(const int chapterNumber)
 {
-    return this->chapterList.at(chapterNumber);
-}
-
-QDomNode XmlDom::getChapter(const QString chapterName)
-{
-    QDomNode empty;
-    for (int i = 0; i < this->chapterList.size(); i++) {
-        if (this->chapterList.at(i).toElement().attribute("name") == chapterName) {
-            return this->chapterList.at(i);
-        }
-    }
-    return empty;
+    return this->domElement.elementsByTagName(GameMenu::ChapterTag).at(chapterNumber);
 }
 
 QString XmlDom::getMenuImage()
@@ -144,7 +124,7 @@ QDomNodeList XmlDom::getChoiceList(QDomNode scene)
 
 QString XmlDom::getFirstChapter()
 {
-    return this->chapterList.at(0).toElement().attribute("name");
+    return this->domElement.elementsByTagName(GameMenu::ChapterTag).at(0).toElement().attribute("name");
 }
 
 bool XmlDom::isPExist(QDomNode scene, int pNumber)
@@ -180,6 +160,31 @@ bool XmlDom::isElementExist(QDomNode scene, int pNumber)
     }
     return true;
 }
+
+int XmlDom::getChapter(QString sceneId)
+{
+    QDomNodeList sceneList;
+    for (int i = 0; i < this->domElement.elementsByTagName(GameMenu::ChapterTag).size(); i++) {
+        sceneList = this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().elementsByTagName(GameMenu::SceneTag);
+        for (int j = 0; j < sceneList.size(); j++) {
+            if (sceneList.at(j).toElement().attribute("id") == sceneId) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
