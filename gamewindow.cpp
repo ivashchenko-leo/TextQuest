@@ -44,11 +44,13 @@ void GameWindow::showChoices()
 {
     QDomNodeList list;
     this->choiceNotExist = false;
-    list = this->xmlDoc->getChoiceList(this->scene);
     this->tCount = 0;
+    list = this->xmlDoc->getChoiceList(this->scene);
+
     for (int i = 0; i < list.size(); i++) {
         QPushButton *button = new QPushButton(list.at(i).toElement().text(), this);
-        button->show();
+        button->move(0, this->ui->textBrowser->cursorRect().y());
+        button->show();;
     }
 }
 
@@ -62,21 +64,7 @@ void GameWindow::start()
     this->scene = this->xmlDoc->getScene(this->sceneId);
     this->chooseAction(this->xmlDoc->getSceneElement(this->scene, this->tCount));
 }
-/*
-void GameWindow::mousePressEvent(QMouseEvent *mouse)
-{
-    qDebug() << "mouse pressed";
-    if (mouse->button() & Qt::LeftButton) {
-        if (this->pTimer->isActive()) {
-            this->pTimer->stop();
-            this->finishParagraph();
-        } else {
-            this->tCount++;
-            this->showParagraph(this->tCount);
-        }
-    }
-}
-*/
+
 void GameWindow::finishParagraph()
 {
     for (; this->cCount < this->pText.size(); this->cCount++) {
@@ -87,6 +75,7 @@ void GameWindow::finishParagraph()
 
 void GameWindow::setScene()
 {
+    this->ui->textBrowser->clear();
     this->scene = this->xmlDoc->getScene(this->sceneId);
 }
 

@@ -8,8 +8,8 @@
 			<sound>sound/fear.mp3</sound>
 			<p>Давай посмотрим что будет, если я просто введу здесь текст на русском языке.</p>
 			<p>Есть много вариантов Lorem Ipsum, но большинство из них имеет не всегда приемлемые модификации, например, юмористические вставки или слова, которые даже отдалённо не напоминают латынь.</p>
-			<!-- <choice scene="2" file="chapter4.xml">Да</choice>
-			<choice scene="4">Нет</choice> -->
+			<choice scene="2" file="chapter4.xml">Да</choice>
+			<choice scene="4">Нет</choice>
 		</scene>
 		<scene id="2">
 			<image>images/background2.jpg</image>

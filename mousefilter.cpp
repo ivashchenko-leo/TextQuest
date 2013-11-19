@@ -16,11 +16,9 @@ bool MouseFilter::eventFilter(QObject *, QEvent *event)
                 this->gameWindow->finishParagraph();
             } else {
                 if (this->gameWindow->choiceNotExist) {
-                    qDebug() << this->gameWindow->choiceNotExist;
                     this->gameWindow->tCount++;
                     if (!this->gameWindow->xmlDoc->isElementExist(this->gameWindow->scene, this->gameWindow->tCount)) {
                         this->gameWindow->sceneId = QString::number(this->gameWindow->sceneId.toInt() + 1);
-                        qDebug() << this->gameWindow->sceneId;
                         if (!this->gameWindow->xmlDoc->isSceneExist(this->gameWindow->sceneId)) {
                             return false;
                         }
