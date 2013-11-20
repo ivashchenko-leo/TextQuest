@@ -43,19 +43,29 @@ void GameWindow::showChars()
 void GameWindow::showChoices()
 {
     QDomNodeList list;
+    int height = 0;
+    this->ui->textBrowser->insertPlainText("\n");
     this->choiceNotExist = false;
-    this->tCount = 0;
+    //tCount = -1 becouse inside mousefilter its incrementing, and become 0;
+    this->tCount = -1;
     list = this->xmlDoc->getChoiceList(this->scene);
 
     for (int i = 0; i < list.size(); i++) {
-        QPushButton *button = new QPushButton(list.at(i).toElement().text(), this);
-        button->move(0, this->ui->textBrowser->cursorRect().y());
-        button->show();;
+        QLabel *button = new QLabel(list.at(i).toElement().text(), this);
+        button->setWordWrap(true);
+        button->move(5, this->ui->textBrowser->cursorRect().y() + i * height);
+        button->setMinimumWidth(this->size().width());
+        height = button->size().height();
+
+        button->installEventFilter(new ChoiceFilter(button, this));
+        button->setObjectName(QString::number(i));
+        button->show();
     }
 }
 
 void GameWindow::setScene(QDomNode scene)
 {
+    this->ui->textBrowser->clear();
     this->scene = scene;
 }
 
@@ -81,7 +91,6 @@ void GameWindow::setScene()
 
 void GameWindow::chooseAction(QDomNode node)
 {
-    qDebug () << node.toElement().tagName();
     if (node.toElement().tagName() == GameMenu::PTag) {
         this->showParagraph(node);
     } else {
@@ -128,7 +137,18 @@ void GameWindow::sendLeftClick()
     qApp->sendEvent(this->ui->textBrowser->viewport(), event);
 }
 
+void GameWindow::setNewFile(QString fileName)
+{
+    this->xmlDoc->loadXml(fileName);
+}
 
-
-
+void GameWindow::deleteChoices()
+{
+    QRegExp regex("^[0-9]{1,2}$");
+    QList<QWidget *> list = this->findChildren<QWidget *>(regex);
+    foreach (QWidget * widget, list) {
+        delete widget;
+    }
+    this->sendLeftClick();
+}
 

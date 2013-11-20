@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include "settings.h"
 #include "mousefilter.h"
+#include "choicefilter.h"
 
 namespace Ui {
 class GameWindow;
@@ -34,6 +35,8 @@ public:
     int chapter;
     bool choiceNotExist;
     void setChapter();
+    void setNewFile(QString fileName);
+    void deleteChoices();
 
 protected:
     //void mousePressEvent(QMouseEvent *mouse);
