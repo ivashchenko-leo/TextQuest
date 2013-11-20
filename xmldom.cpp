@@ -21,8 +21,11 @@ QDomNodeList XmlDom::getSceneList(const QString chapterName)
 {
     QDomNodeList empty;
     for (int i = 0; i < this->domElement.elementsByTagName(GameMenu::ChapterTag).size(); i++) {
-        if (this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().attribute("name") == chapterName)
-            return this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().elementsByTagName(GameMenu::SceneTag);
+        if (this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().attribute("name")
+                == chapterName) {
+            return this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement()
+                    .elementsByTagName(GameMenu::SceneTag);
+        }
     }
     return empty;
 }
@@ -32,7 +35,8 @@ QDomNode XmlDom::getScene(const QString id)
     QDomNodeList sceneList;
     QDomNode empty;
     for (int i = 0; i < this->domElement.elementsByTagName(GameMenu::ChapterTag).size(); i++) {
-        sceneList = this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().elementsByTagName(GameMenu::SceneTag);
+        sceneList = this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement()
+                .elementsByTagName(GameMenu::SceneTag);
         for (int j = 0; j < sceneList.size(); j++) {
             if (sceneList.at(j).toElement().attribute("id") == id) {
                 return sceneList.at(j);
@@ -55,7 +59,8 @@ bool XmlDom::isSceneExist(const QString id)
     QDomNodeList sceneList;
 
     for (int i = 0; i < this->domElement.elementsByTagName(GameMenu::ChapterTag).size(); i++) {
-        sceneList = this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().elementsByTagName(GameMenu::SceneTag);
+        sceneList = this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement()
+                .elementsByTagName(GameMenu::SceneTag);
         for (int j = 0; j < sceneList.size(); j++) {
             if (sceneList.at(j).toElement().attribute("id") == id) {
                 return true;
@@ -165,7 +170,8 @@ int XmlDom::getChapter(QString sceneId)
 {
     QDomNodeList sceneList;
     for (int i = 0; i < this->domElement.elementsByTagName(GameMenu::ChapterTag).size(); i++) {
-        sceneList = this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement().elementsByTagName(GameMenu::SceneTag);
+        sceneList = this->domElement.elementsByTagName(GameMenu::ChapterTag).at(i).toElement()
+                .elementsByTagName(GameMenu::SceneTag);
         for (int j = 0; j < sceneList.size(); j++) {
             if (sceneList.at(j).toElement().attribute("id") == sceneId) {
                 return i;
@@ -175,7 +181,31 @@ int XmlDom::getChapter(QString sceneId)
     return -1;
 }
 
+void XmlDom::loadXml(QString fileName)
+{
+    QDomDocument domDoc;
 
+    QFile file(fileName);
+
+    if (file.open(QIODevice::ReadOnly)) {
+        if (domDoc.setContent(&file)) {
+            QDomElement domElement = domDoc.documentElement();
+            if (domElement.tagName() != GameMenu::GameTag) {
+                QMessageBox::critical(0, tr("Error!"), tr("This file is not TextQuest game xml file."));
+            }
+            this->domElement = domElement;
+        }
+    } else {
+        QMessageBox::critical(0, tr("Error!"), tr("No such file: ") + fileName);
+        //Пока пусть просто закрывает все к херам, если фаил не найден.
+        qApp->quit();
+    }
+}
+
+QString XmlDom::getGameName()
+{
+    return this->domElement.attribute("name");
+}
 
 
 

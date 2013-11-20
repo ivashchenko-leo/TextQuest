@@ -31,6 +31,9 @@ public:
     bool isSceneExist(const QString id);
     bool isChapterExist(const int chapterNumber);
     bool isElementExist(QDomNode scene, int pNumber);
+    QDomNodeList getChoicesList(QDomNode scene);
+    void loadXml(QString fileName);
+    QString getGameName();
 
 private:
     QDomElement domElement;

@@ -1,4 +1,4 @@
-#ifndef GAMEMENU_H
+﻿#ifndef GAMEMENU_H
 #define GAMEMENU_H
 
 #include <QDialog>
@@ -40,7 +40,6 @@ public:
 
 private:
     Ui::GameMenu *ui;
-    QString gameName;
     //QXmlSimpleReader reader;
     //QStack<QFile> filesStack;
     //void parseXml();

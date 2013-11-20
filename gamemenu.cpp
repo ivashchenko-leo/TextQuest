@@ -36,7 +36,7 @@ void GameMenu::newGame()
 {
     GameWindow gameWindow(this, this->xmlDoc);
     //this->hide();
-    gameWindow.setToolTip(this->gameName);
+    gameWindow.setToolTip(this->xmlDoc->getGameName());
     gameWindow.start();
     gameWindow.exec();
 }
@@ -70,7 +70,7 @@ void GameMenu::parseXml(QFile *file)
 }*/
 void GameMenu::loadXml(QString fileName)
 {
-    QDomDocument domDoc;
+    /*QDomDocument domDoc;
 
     QFile file(fileName);
 
@@ -86,7 +86,9 @@ void GameMenu::loadXml(QString fileName)
             }
             this->xmlDoc->setGameElement(domElement);
         }
-    }
+    }*/
+    this->xmlDoc->loadXml(fileName);
+    this->setToolTip(this->xmlDoc->getGameName());
 }
 
 //void GameMenu::getNewFile(QFile file)
