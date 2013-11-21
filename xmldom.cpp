@@ -196,9 +196,14 @@ void XmlDom::loadXml(QString fileName)
             this->domElement = domElement;
         }
     } else {
-        QMessageBox::critical(0, tr("Error!"), tr("No such file: ") + fileName);
-        //Пока пусть просто закрывает все к херам, если фаил не найден.
-        qApp->quit();
+        QMessageBox::information(0, tr("Error!"), tr("No such file: ") + fileName);
+        fileName = QFileDialog::getOpenFileName(0,  tr("Open File"), "C:", tr("XML files (*.xml)"));
+        if (!fileName.isEmpty()) {
+            this->loadXml(fileName);
+        } else {
+            qApp->activeWindow()->close();
+        }
+        //qApp->quit();
     }
 }
 
