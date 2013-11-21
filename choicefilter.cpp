@@ -15,7 +15,6 @@ bool ChoiceFilter::eventFilter(QObject *obj, QEvent *event)
             choiceNode = this->gameWindow->xmlDoc->getChoiceList(this->gameWindow->scene)
                     .at(obj->objectName().toInt());
             if (!choiceNode.toElement().attribute("file").isEmpty()) {
-                qDebug() << "file";
                 this->gameWindow->setNewFile(choiceNode.toElement().attribute("file"));
             }
             this->gameWindow->sceneId = choiceNode.toElement().attribute("scene");

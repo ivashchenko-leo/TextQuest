@@ -13,7 +13,7 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     this->sceneId = "1";
     this->chapter = 0;
     this->tCount = 0;
-    this->ui->textBrowser->viewport()->installEventFilter(new MouseFilter(this->ui->textBrowser, this));
+    this->ui->textBrowser->viewport()->installEventFilter(new MouseFilter(this->ui->textBrowser->viewport(), this));
     connect(this->pTimer, SIGNAL(timeout()), SLOT(showChars()));
 }
 
@@ -51,7 +51,7 @@ void GameWindow::showChoices()
     list = this->xmlDoc->getChoiceList(this->scene);
 
     for (int i = 0; i < list.size(); i++) {
-        QLabel *button = new QLabel(list.at(i).toElement().text(), this);
+        QLabel *button = new QLabel(list.at(i).toElement().text(), this->ui->textBrowser->viewport());
         button->setWordWrap(true);
         button->move(5, this->ui->textBrowser->cursorRect().y() + i * height);
         button->setMinimumWidth(this->size().width());
@@ -145,7 +145,7 @@ void GameWindow::setNewFile(QString fileName)
 void GameWindow::deleteChoices()
 {
     QRegExp regex("^[0-9]{1,2}$");
-    QList<QWidget *> list = this->findChildren<QWidget *>(regex);
+    QList<QWidget *> list = this->ui->textBrowser->viewport()->findChildren<QWidget *>(regex);
     foreach (QWidget * widget, list) {
         delete widget;
     }

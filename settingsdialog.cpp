@@ -1,4 +1,4 @@
-#include "settingsdialog.h"
+﻿#include "settingsdialog.h"
 #include "ui_settings.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
@@ -88,18 +88,6 @@ void SettingsDialog::acceptSettings()
     this->settings->flush();
     this->accept();
 }
-
-/*virtual*/
-/*void SettingsDialog::mousePressEvent(QMouseEvent* mouse)
-{
-    QPoint coord;
-    QWidget* widget;
-
-    coord = mouse->pos();
-    widget = qApp->widgetAt(this->mapToGlobal(coord));
-    QMessageBox::information(this, "Title", widget->objectName());
-    //mouse->
-}*/
 
 
 

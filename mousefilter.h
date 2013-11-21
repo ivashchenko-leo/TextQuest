@@ -17,6 +17,7 @@ protected:
 
 private:
     GameWindow *gameWindow;
+    bool leftButtonClicked();
 };
 
 #endif // MOUSEFILTER_H
