@@ -113,6 +113,11 @@ void GameWindow::chooseAction(QDomNode node)
 
 void GameWindow::showImage(QDomNode image)
 {
+    if (!image.toElement().text().isEmpty()) {
+        this->ui->textBrowser->setStyleSheet("background: url(./" + image.toElement().text() + ")");
+    } else {
+        qDebug() << "No such image";
+    }
     this->sendLeftClick();
 }
 
