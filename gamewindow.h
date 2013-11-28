@@ -33,12 +33,11 @@ public:
     void setScene();
     QDomNode scene;
     int chapter;
-    bool choiceNotExist;
     void setChapter();
     void setNewFile(QString fileName);
-    void deleteChoices();
     QVBoxLayout *mainLayout;
     QLabel *currentLabel;
+    bool choiceNotExist;
 
 protected:
     //void mousePressEvent(QMouseEvent *mouse);
@@ -51,6 +50,7 @@ private:
     void showImage(QDomNode image);
     void playSound(QDomNode sound);
     void sendLeftClick();
+    void clrscr();
 
 private slots:
     void showChars();

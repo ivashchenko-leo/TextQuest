@@ -18,9 +18,8 @@ bool ChoiceFilter::eventFilter(QObject *obj, QEvent *event)
                 this->gameWindow->setNewFile(choiceNode.toElement().attribute("file"));
             }
             this->gameWindow->sceneId = choiceNode.toElement().attribute("scene");
-            this->gameWindow->setScene();
             this->gameWindow->choiceNotExist = true;
-            this->gameWindow->deleteChoices();
+            this->gameWindow->setScene();
             return true;
         }
     }

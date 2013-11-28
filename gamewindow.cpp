@@ -9,9 +9,7 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     ui->setupUi(this);
 
     this->mainLayout = new QVBoxLayout(ui->saContents);
-    //this->mainLayout->setAlignment(Qt::AlignTop);
-
-    this->ui->scrollArea->setAlignment(Qt::AlignTop);
+    this->mainLayout->setAlignment(Qt::AlignTop);
 
     this->xmlDoc = xmlDoc;
     this->cCount = 0;
@@ -31,12 +29,12 @@ GameWindow::~GameWindow()
 
 void GameWindow::showParagraph(QDomNode paragraph)
 {
-    //this->pText = paragraph.toElement().text() + "\n";
     this->pText = paragraph.toElement().text();
 
     QLabel *label = new QLabel();
     label->setWordWrap(true);
-    label->setMinimumWidth(this->size().width());
+    label->setMinimumWidth(this->ui->saContents->size().width()/2);
+    label->setMaximumWidth(this->ui->saContents->size().width()-20);
     label->setObjectName("paragraph_" + QString::number(this->tCount));
     this->currentLabel = label;
     this->mainLayout->addWidget(label);
@@ -58,8 +56,7 @@ void GameWindow::showChars()
 void GameWindow::showChoices()
 {
     QDomNodeList list;
-    //int height = 0;
-    //this->ui->textBrowser->insertPlainText("\n");
+
     this->choiceNotExist = false;
     //tCount = -1 becouse inside mousefilter its incrementing, and become 0;
     this->tCount = -1;
@@ -67,22 +64,33 @@ void GameWindow::showChoices()
 
     for (int i = 0; i < list.size(); i++) {
         QLabel *label = new QLabel(list.at(i).toElement().text());
-        label->setWordWrap(true);
 
-        label->setMinimumWidth(this->size().width());
-        //height = label->size().height();
+        label->setWordWrap(true);
+        label->setMinimumWidth(this->ui->saContents->size().width()/2);
+        label->setMaximumWidth(this->ui->saContents->size().width()-20);
 
         label->installEventFilter(new ChoiceFilter(label, this));
         label->setObjectName(QString::number(i));
-        //button->move(5, this->ui->textBrowser->cursorRect().y() + i * height);
+
         this->mainLayout->addWidget(label);
     }
 }
 
 void GameWindow::setScene(QDomNode scene)
 {
-    //this->ui->textBrowser->clear();
+    this->clrscr();
     this->scene = scene;
+    this->sendLeftClick();
+}
+
+void GameWindow::clrscr()
+{
+    QList<QWidget* > list;
+    list = this->ui->saContents->findChildren<QWidget* >(QRegExp("^(paragraph_[0-9][0-9]?|[0-9][0-9]?)$"));
+
+    foreach (QWidget *w, list) {
+        delete w;
+    }
 }
 
 void GameWindow::start()
@@ -101,12 +109,13 @@ void GameWindow::finishParagraph()
 
 void GameWindow::setScene()
 {
-    //this->ui->textBrowser->clear();
+    this->clrscr();
     this->scene = this->xmlDoc->getScene(this->sceneId);
     if (this->scene.toElement().isNull()) {
         QMessageBox::information(this, tr("Error!"), tr("No such scene with id = %1.").arg(this->sceneId));
         qApp->activeWindow()->close();
     }
+    this->sendLeftClick();
 }
 
 void GameWindow::chooseAction(QDomNode node)
@@ -135,7 +144,6 @@ void GameWindow::showImage(QDomNode image)
 {
     if (!image.toElement().text().isEmpty()) {
         this->setStyleSheet("background: url(./" + image.toElement().text() + ");");
-        qDebug() << "Image set.";
     } else {
         qDebug() << "No such image";
     }
@@ -168,13 +176,4 @@ void GameWindow::setNewFile(QString fileName)
     this->xmlDoc->loadXml(fileName);
 }
 
-void GameWindow::deleteChoices()
-{
-    QRegExp regex("^[0-9]{1,2}$");
-    QList<QWidget *> list = this->mainLayout->findChildren<QWidget *>(regex);
-    foreach (QWidget * widget, list) {
-        delete widget;
-    }
-    this->sendLeftClick();
-}
 
