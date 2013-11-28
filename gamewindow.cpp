@@ -144,7 +144,7 @@ void GameWindow::showImage(QDomNode image)
     if (!image.toElement().text().isEmpty()) {
         QImage background(image.toElement().text());
 
-        if (background.isNull()) {
+        if (!background.isNull()) {
             QBrush brush(Qt::TexturePattern);
             brush.setTextureImage(background.scaled(this->size()));
             QPalette palette = this->palette();
