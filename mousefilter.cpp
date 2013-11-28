@@ -42,9 +42,6 @@ bool MouseFilter::leftButtonClicked()
             this->gameWindow->tCount++;
             if (!this->gameWindow->xmlDoc->isElementExist(this->gameWindow->scene, this->gameWindow->tCount)) {
                 this->gameWindow->sceneId = QString::number(this->gameWindow->sceneId.toInt() + 1);
-                if (!this->gameWindow->xmlDoc->isSceneExist(this->gameWindow->sceneId)) {
-                    return false;
-                }
                 this->gameWindow->setScene();
                 this->gameWindow->setChapter();
                 this->gameWindow->tCount = 0;

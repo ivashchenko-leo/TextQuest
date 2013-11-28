@@ -80,7 +80,6 @@ void GameWindow::setScene(QDomNode scene)
 {
     this->clrscr();
     this->scene = scene;
-    this->sendLeftClick();
 }
 
 void GameWindow::clrscr()
@@ -115,7 +114,7 @@ void GameWindow::setScene()
         QMessageBox::information(this, tr("Error!"), tr("No such scene with id = %1.").arg(this->sceneId));
         qApp->activeWindow()->close();
     }
-    this->sendLeftClick();
+    qDebug() << this->sceneId;
 }
 
 void GameWindow::chooseAction(QDomNode node)
@@ -143,9 +142,17 @@ void GameWindow::chooseAction(QDomNode node)
 void GameWindow::showImage(QDomNode image)
 {
     if (!image.toElement().text().isEmpty()) {
-        this->setStyleSheet("background: url(./" + image.toElement().text() + ");");
+        QImage background(image.toElement().text());
+
+        if (background.isNull()) {
+            QBrush brush(Qt::TexturePattern);
+            brush.setTextureImage(background.scaled(this->size()));
+            QPalette palette = this->palette();
+            palette.setBrush(QPalette::Background, brush);
+            this->setPalette(palette);
+        }
     } else {
-        qDebug() << "No such image";
+        qDebug() << "Empty image tag!";
     }
     this->sendLeftClick();
 }

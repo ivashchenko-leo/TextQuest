@@ -38,6 +38,7 @@ public:
     QVBoxLayout *mainLayout;
     QLabel *currentLabel;
     bool choiceNotExist;
+    void sendLeftClick();
 
 protected:
     //void mousePressEvent(QMouseEvent *mouse);
@@ -49,7 +50,7 @@ private:
     void showChoices();
     void showImage(QDomNode image);
     void playSound(QDomNode sound);
-    void sendLeftClick();
+
     void clrscr();
 
 private slots:
