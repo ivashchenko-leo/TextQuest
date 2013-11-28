@@ -37,6 +37,8 @@ public:
     void setChapter();
     void setNewFile(QString fileName);
     void deleteChoices();
+    QVBoxLayout *mainLayout;
+    QLabel *currentLabel;
 
 protected:
     //void mousePressEvent(QMouseEvent *mouse);

@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QTextBrowser" name="textBrowser">
+  <widget class="QScrollArea" name="scrollArea">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -28,21 +28,19 @@
      <height>481</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <pointsize>10</pointsize>
-    </font>
+   <property name="widgetResizable">
+    <bool>true</bool>
    </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAsNeeded</enum>
-   </property>
-   <property name="horizontalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
+   <widget class="QWidget" name="saContents">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>639</width>
+      <height>479</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
