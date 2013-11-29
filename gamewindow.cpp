@@ -115,7 +115,6 @@ void GameWindow::setScene()
         QMessageBox::information(this, tr("Error!"), tr("No such scene with id = %1.").arg(this->sceneId));
         qApp->activeWindow()->close();
     }
-    qDebug() << this->sceneId;
 }
 
 void GameWindow::chooseAction(QDomNode node)
@@ -204,7 +203,6 @@ void GameWindow::contextMenuEvent(QContextMenuEvent *event)
     menu.addAction(backAct);
     menu.addAction(skipAct);
     menu.addAction(saveAct);
-    menu.addAction(backAct);
     menu.addAction(loadAct);
     menu.addAction(color1Act);
     menu.addAction(color2Act);
