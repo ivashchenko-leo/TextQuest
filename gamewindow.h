@@ -41,7 +41,7 @@ public:
     void sendLeftClick();
 
 protected:
-    //void mousePressEvent(QMouseEvent *mouse);
+    void contextMenuEvent(QContextMenuEvent *event);
 
 private:
     Ui::GameWindow *ui;
@@ -50,11 +50,23 @@ private:
     void showChoices();
     void showImage(QDomNode image);
     void playSound(QDomNode sound);
-
     void clrscr();
+    QAction *backAct;
+    QAction *skipAct;
+    QAction *saveAct;
+    QAction *loadAct;
+    QAction *color1Act;
+    QAction *color2Act;
+    QAction *fullScreenAct;
+    //QAction *settings;
+    QAction *autoReadAct;
+    QAction *changeInterfaceAct;
+    QAction *menuAct;
+    void createActions();
 
 private slots:
     void showChars();
+    void stuck();
 
 };
 

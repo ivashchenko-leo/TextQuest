@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -45,4 +45,3 @@ void MainWindow::changeSettings()
 {
     this->pSettingsDialog->exec();
 }
-

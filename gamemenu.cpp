@@ -35,7 +35,6 @@ void GameMenu::newGame()
 {
     GameWindow gameWindow(this, this->xmlDoc);
     //this->hide();
-    gameWindow.setToolTip(this->xmlDoc->getGameName());
     gameWindow.start();
     gameWindow.exec();
 }

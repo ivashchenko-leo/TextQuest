@@ -19,6 +19,7 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     this->tCount = 0;
 
     this->ui->scrollArea->viewport()->installEventFilter(new MouseFilter(this->ui->scrollArea->viewport(), this));
+    this->createActions();
     connect(this->pTimer, SIGNAL(timeout()), SLOT(showChars()));
 }
 
@@ -143,13 +144,22 @@ void GameWindow::showImage(QDomNode image)
 {
     if (!image.toElement().text().isEmpty()) {
         QImage background(image.toElement().text());
-
+        //background.scaled(this->size())
         if (!background.isNull()) {
+            if (background.size().width() > this->size().width()) {
+                background = background.scaledToWidth(this->size().width());
+            }
+            if (background.size().height() > this->size().height()) {
+                background = background.scaledToHeight(this->size().height());
+            }
+
             QBrush brush(Qt::TexturePattern);
-            brush.setTextureImage(background.scaled(this->size()));
+            brush.setTextureImage(background);
             QPalette palette = this->palette();
             palette.setBrush(QPalette::Background, brush);
             this->setPalette(palette);
+        } else {
+            qDebug() << "No such image " + image.toElement().text();
         }
     } else {
         qDebug() << "Empty image tag!";
@@ -182,5 +192,89 @@ void GameWindow::setNewFile(QString fileName)
 {
     this->xmlDoc->loadXml(fileName);
 }
+
+void GameWindow::stuck()
+{
+
+}
+
+void GameWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu menu(this);
+    menu.addAction(backAct);
+    menu.addAction(skipAct);
+    menu.addAction(saveAct);
+    menu.addAction(backAct);
+    menu.addAction(loadAct);
+    menu.addAction(color1Act);
+    menu.addAction(color2Act);
+    menu.addAction(fullScreenAct);
+    menu.addAction(menuAct);
+    menu.addAction(autoReadAct);
+    menu.addAction(changeInterfaceAct);
+    menu.exec(event->globalPos());
+}
+
+void GameWindow::createActions()
+{
+
+    this->backAct = new QAction(tr("&Back"), this);
+    //this->backAct->setShortcuts();
+    this->backAct->setStatusTip(tr("Return to game"));
+    connect(this->backAct, SIGNAL(triggered()), this, SLOT(stuck()));
+
+    this->skipAct = new QAction(tr("&Skip"), this);
+    //this->skipAct->setShortcuts(QKeySequence::New);
+    this->skipAct->setStatusTip(tr("Skip text"));
+    connect(this->skipAct, SIGNAL(triggered()), this, SLOT(stuck()));
+
+    this->saveAct = new QAction(tr("&Save"), this);
+    //this->saveAct->setShortcuts(QKeySequence::New);
+    this->saveAct->setStatusTip(tr("Save game"));
+    connect(this->saveAct, SIGNAL(triggered()), this, SLOT(stuck()));
+
+    this->loadAct = new QAction(tr("&Load"), this);
+    //this->loadAct->setShortcuts(QKeySequence::New);
+    this->loadAct->setStatusTip(tr("Load game"));
+    connect(this->loadAct, SIGNAL(triggered()), this, SLOT(stuck()));
+
+    this->color1Act = new QAction(tr("&Color one"), this);
+    //this->color1Act->setShortcuts(QKeySequence::New);
+    this->color1Act->setStatusTip(tr("Set color one"));
+    connect(this->color1Act, SIGNAL(triggered()), this, SLOT(stuck()));
+
+    this->color2Act = new QAction(tr("&Color two"), this);
+    //this->color2Act->setShortcuts(QKeySequence::New);
+    this->color2Act->setStatusTip(tr("Set color two"));
+    connect(this->color2Act, SIGNAL(triggered()), this, SLOT(stuck()));
+
+    this->fullScreenAct = new QAction(tr("&Full screen"), this);
+    //this->fullScreenAct->setShortcuts(QKeySequence::New);
+    this->fullScreenAct->setStatusTip(tr("Set full screen"));
+    connect(this->fullScreenAct, SIGNAL(triggered()), this, SLOT(stuck()));
+
+    this->menuAct = new QAction(tr("&Game menu"), this);
+    //this->menuAct->setShortcuts(QKeySequence::New);
+    this->menuAct->setStatusTip(tr("Return to game menu"));
+    connect(this->menuAct, SIGNAL(triggered()), this, SLOT(stuck()));
+
+    this->autoReadAct = new QAction(tr("&Auto-read"), this);
+    //this->autoReadAct->setShortcuts(QKeySequence::New);
+    this->autoReadAct->setStatusTip(tr("Enable auto-read mode"));
+    connect(this->autoReadAct, SIGNAL(triggered()), this, SLOT(stuck()));
+
+    this->changeInterfaceAct = new QAction(tr("&Change interface"), this);
+    //this->changeInterfaceAct->setShortcuts(QKeySequence::New);
+    connect(this->changeInterfaceAct, SIGNAL(triggered()), this, SLOT(stuck()));
+}
+
+
+
+
+
+
+
+
+
 
 

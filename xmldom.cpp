@@ -32,6 +32,7 @@ QDomNodeList XmlDom::getSceneList(const QString chapterName)
 
 QDomNode XmlDom::getScene(const QString id)
 {
+    qDebug() << "getScene started!";
     QDomNodeList sceneList;
     QDomNode empty;
     for (int i = 0; i < this->domElement.elementsByTagName(GameMenu::ChapterTag).size(); i++) {
@@ -39,6 +40,7 @@ QDomNode XmlDom::getScene(const QString id)
                 .elementsByTagName(GameMenu::SceneTag);
         for (int j = 0; j < sceneList.size(); j++) {
             if (sceneList.at(j).toElement().attribute("id") == id) {
+                qDebug() <<  "scene id" << sceneList.at(j).toElement().attribute("id");
                 return sceneList.at(j);
             }
         }
