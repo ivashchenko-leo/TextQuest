@@ -2,11 +2,14 @@
 #define GAMEWINDOW_H
 
 #include <QDialog>
+#include <QMouseEvent>
+#include <QMenu>
 #include "xmldom.h"
-#include <QPushButton>
+#include <QLabel>
 #include "settings.h"
 #include "mousefilter.h"
 #include "choicefilter.h"
+#include <QVBoxLayout>
 
 namespace Ui {
 class GameWindow;

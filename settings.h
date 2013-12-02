@@ -1,7 +1,7 @@
-#ifndef SETTINGS_H
+﻿#ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <QtGui>
+#include "mainwindow.h"
 
 class Settings : public QObject
 {
@@ -21,8 +21,7 @@ public:
 
     const static QString FileName;
     const static QString TextSpeed;
-    const static QString Brightness;
-    const static QString Transparency;
+    const static QString Interface;
     const static QString Volume;
     const static QString AutoRead;
     const static QString FullScreen;
@@ -30,6 +29,8 @@ public:
     const static QString SkipUnreadText;
     const static QString Sound;
     const static int ColorCount;
+    const static int Width;
+    const static int Height;
 
 private:
     QFile *file;

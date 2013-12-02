@@ -34,17 +34,13 @@ void SettingsDialog::loadOnUi()
     ui->cbSkipAfterChoice->setChecked(this->settings->getOption(Settings::SkipAfterChoice).toBool());
     ui->cbSkipUnreadText->setChecked(this->settings->getOption(Settings::SkipUnreadText).toBool());
     ui->cbSound->setChecked(this->settings->getOption(Settings::Sound).toBool());
-    ui->hsBrightness->setValue(this->settings->getOption(Settings::Brightness).toInt());
     ui->hsSpeed->setValue(this->settings->getOption(Settings::TextSpeed).toInt());
-    ui->hsTransparency->setValue(this->settings->getOption(Settings::Transparency).toInt());
     ui->hsVolume->setValue(this->settings->getOption(Settings::Volume).toInt());
 }
 
 void SettingsDialog::loadFromUi()
 {
     this->settings->setOption(Settings::TextSpeed, QVariant(ui->hsSpeed->value()));
-    this->settings->setOption(Settings::Brightness, QVariant(ui->hsBrightness->value()));
-    this->settings->setOption(Settings::Transparency, QVariant(ui->hsTransparency->value()));
     this->settings->setOption(Settings::Volume, QVariant(ui->hsVolume->value()));
     this->settings->setOption(Settings::AutoRead, QVariant(ui->cbAutoRead->isChecked()));
     this->settings->setOption(Settings::FullScreen, QVariant(ui->cbFullScreen->isChecked()));

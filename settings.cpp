@@ -1,15 +1,16 @@
-#include "settings.h"
+﻿#include "settings.h"
 Settings* Settings::self = 0;
 const QString Settings::FileName("config.cfg");
 const QString Settings::TextSpeed("TextSpeed");
-const QString Settings::Brightness("Brightness");
-const QString Settings::Transparency("Transparency");
 const QString Settings::Volume("Volume");
 const QString Settings::AutoRead("AutoRead");
 const QString Settings::FullScreen("FullScreen");
 const QString Settings::SkipAfterChoice("SkipAfterChoice");
 const QString Settings::SkipUnreadText("SkipUnreadText");
 const QString Settings::Sound("Sound");
+const QString Settings::Interface("Interface");
+const int Settings::Width = 1024;
+const int Settings::Height = 768;
 const int Settings::ColorCount = 2;
 
 Settings::Settings() :

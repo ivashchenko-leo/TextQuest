@@ -1,8 +1,9 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QApplication>
 #include "gamemenu.h"
 #include "settingsdialog.h"
 
@@ -10,6 +11,8 @@
 namespace Ui {
 class MainWindow;
 }
+class SettingsDialog;
+class GameMenu;
 
 class MainWindow : public QMainWindow
 {

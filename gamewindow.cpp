@@ -18,7 +18,17 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     this->chapter = 0;
     this->tCount = 0;
 
+
     this->ui->scrollArea->viewport()->installEventFilter(new MouseFilter(this->ui->scrollArea->viewport(), this));
+
+    if (Settings::instance()->getOption("FullScreen").toBool()) {
+        this->showFullScreen();
+    } else {
+        this->setFixedSize(Settings::Width, Settings::Height);
+    }
+    this->ui->scrollArea->setFixedSize(this->size());
+    this->ui->saContents->setFixedSize(this->size().width()-10, this->size().height()-10);
+
     this->createActions();
     connect(this->pTimer, SIGNAL(timeout()), SLOT(showChars()));
 }
