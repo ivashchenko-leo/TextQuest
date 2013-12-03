@@ -24,6 +24,12 @@ GameMenu::GameMenu(QWidget *parent) :
     connect(ui->pbNewGame, SIGNAL(clicked()), SLOT(newGame()));
     connect(ui->pbChapters, SIGNAL(clicked()), SLOT(chapters()));
     connect(ui->pbLoad, SIGNAL(clicked()), SLOT(loadMenu()));
+
+    if (Settings::instance()->getOption("FullScreen").toBool()) {
+        this->showFullScreen();
+    } else {
+        this->setFixedSize(Settings::Width, Settings::Height);
+    }
 }
 
 GameMenu::~GameMenu()
