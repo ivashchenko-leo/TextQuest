@@ -10,6 +10,7 @@
 #include "mousefilter.h"
 #include "choicefilter.h"
 #include <QVBoxLayout>
+#include "bass.h"
 
 namespace Ui {
 class GameWindow;
@@ -66,6 +67,7 @@ private:
     QAction *changeInterfaceAct;
     QAction *menuAct;
     void createActions();
+    HSTREAM stream;
 
 private slots:
     void showChars();

@@ -41,3 +41,9 @@ FORMS    += mainwindow.ui \
     gamemenu.ui \
     chaptersdialog.ui \
     gamewindow.ui
+
+win32:CONFIG(release, debug|release): LIBS += -L"D:/Projects/BASS/Windows/c/" -lbass
+else:win32:CONFIG(debug, debug|release): LIBS += -L"D:/Projects/BASS/Windows/c/" -lbassd
+
+INCLUDEPATH += D:/Projects/BASS/Windows/c
+DEPENDPATH += D:/Projects/BASS/Windows/c

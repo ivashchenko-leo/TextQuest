@@ -18,7 +18,6 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     this->chapter = 0;
     this->tCount = 0;
 
-
     this->ui->scrollArea->viewport()->installEventFilter(new MouseFilter(this->ui->scrollArea->viewport(), this));
 
     if (Settings::instance()->getOption("FullScreen").toBool()) {
@@ -26,6 +25,13 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     } else {
         this->setFixedSize(Settings::Width, Settings::Height);
     }
+
+    if (BASS_Init(-1, 44100, 0, this->winId(), NULL)) {
+        BASS_SetVolume(Settings::instance()->getOption(Settings::Volume).toFloat());
+    } else {
+        qWarning() << "Error! Bass_Init code " << BASS_ErrorGetCode();
+    }
+
     this->ui->scrollArea->setFixedSize(this->size());
     this->ui->saContents->setFixedSize(this->size().width()-10, this->size().height()-10);
 
@@ -35,6 +41,7 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
 
 GameWindow::~GameWindow()
 {
+    BASS_Free();
     delete ui;
 }
 
@@ -43,11 +50,13 @@ void GameWindow::showParagraph(QDomNode paragraph)
     this->pText = paragraph.toElement().text();
 
     QLabel *label = new QLabel();
+
     label->setWordWrap(true);
     label->setMinimumWidth(this->ui->saContents->size().width()/2);
     label->setMaximumWidth(this->ui->saContents->size().width()-20);
     label->setObjectName("paragraph_" + QString::number(this->tCount));
     this->currentLabel = label;
+
     this->mainLayout->addWidget(label);
 
     this->pTimer->start(Settings::instance()->getOption(Settings::TextSpeed).toInt());
@@ -142,7 +151,7 @@ void GameWindow::chooseAction(QDomNode node)
                     this->showChoices();
                 } else {
                     this->sendLeftClick();
-                    qDebug() << "Unexpected tag! " << node.toElement().tagName();
+                    qWarning() << "Unexpected tag! " << node.toElement().tagName();
                 }
             }
         }
@@ -164,11 +173,13 @@ void GameWindow::showImage(QDomNode image)
 
             QBrush brush(Qt::TexturePattern);
             brush.setTextureImage(background);
+
             QPalette palette = this->palette();
             palette.setBrush(QPalette::Background, brush);
+
             this->setPalette(palette);
         } else {
-            qDebug() << "No such image " + image.toElement().text();
+            qWarning() << QString("No such image %1").arg(image.toElement().text());
         }
     } else {
         qDebug() << "Empty image tag!";
@@ -178,6 +189,26 @@ void GameWindow::showImage(QDomNode image)
 
 void GameWindow::playSound(QDomNode sound)
 {
+    if (this->stream) {
+        if (BASS_ChannelIsActive(this->stream))
+            BASS_ChannelStop(this->stream);
+
+        BASS_StreamFree(this->stream);
+    }
+
+    bool playback = !sound.toElement().attribute("repeat").isNull();
+
+    if (Settings::instance()->getOption(Settings::Sound).toBool()) {
+        this->stream = BASS_StreamCreateFile(FALSE, sound.toElement().text().toUtf8().data(), 0, 0, BASS_UNICODE);
+        //this->stream = BASS_StreamCreateFile(FALSE, "Citadel_Underbelly.mp3", 0, 0, BASS_UNICODE);
+        qDebug() << sound.toElement().text().toUtf8().data();
+        if (this->stream) {
+            BASS_ChannelPlay(this->stream, playback);
+        } else {
+            qWarning() << "Error! Bass_StreamCreateFile code" << BASS_ErrorGetCode();
+        }
+    }
+
     this->sendLeftClick();
 }
 
