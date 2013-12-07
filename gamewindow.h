@@ -43,6 +43,7 @@ public:
     QLabel *currentLabel;
     bool choiceNotExist;
     void sendLeftClick();
+    QColor textColor;
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
@@ -69,12 +70,13 @@ private:
     HSTREAM stream;
     void setResolution(bool fullScreen);
 
+
 private slots:
     void showChars();
     void stuck();
-    void back();
     void skipText();
     void toggleFullScreen();
+    void toggleColor();
 
 };
 

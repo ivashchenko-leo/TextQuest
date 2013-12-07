@@ -17,6 +17,7 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     this->sceneId = "1";
     this->chapter = 0;
     this->tCount = 0;
+    this->textColor = Settings::instance()->getColor(0);
 
     this->ui->scrollArea->viewport()->installEventFilter(new MouseFilter(this->ui->scrollArea->viewport(), this));
 
@@ -62,8 +63,13 @@ void GameWindow::showParagraph(QDomNode paragraph)
     this->pText = paragraph.toElement().text();
 
     QLabel *label = new QLabel();
+    QPalette palette;
+
+    palette.setColor(label->foregroundRole(), this->textColor);
 
     label->setWordWrap(true);
+    label->setPalette(palette);
+    label->setFont(Settings::instance()->getFont());
     label->setMinimumWidth(this->ui->saContents->size().width()/2);
     label->setMaximumWidth(this->ui->saContents->size().width()-20);
     label->setObjectName("paragraph_" + QString::number(this->tCount));
@@ -88,6 +94,7 @@ void GameWindow::showChars()
 void GameWindow::showChoices()
 {
     QDomNodeList list;
+    QPalette palette;
 
     this->choiceNotExist = false;
     //tCount = -1 becouse inside mousefilter its incrementing, and become 0;
@@ -97,7 +104,10 @@ void GameWindow::showChoices()
     for (int i = 0; i < list.size(); i++) {
         QLabel *label = new QLabel(list.at(i).toElement().text());
 
+        palette.setColor(label->foregroundRole(), this->textColor);
         label->setWordWrap(true);
+        label->setPalette(palette);
+        label->setFont(Settings::instance()->getFont());
         label->setMinimumWidth(this->ui->saContents->size().width()/2);
         label->setMaximumWidth(this->ui->saContents->size().width()-20);
 
@@ -258,10 +268,6 @@ void GameWindow::stuck()
 
 }
 
-void GameWindow::back()
-{
-}
-
 void GameWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu(this);
@@ -292,11 +298,29 @@ void GameWindow::toggleFullScreen()
     this->setResolution(fullScreen);
 }
 
+void GameWindow::toggleColor()
+{
+    static int colorNumber = 0;
+    QPalette palette;
+
+    colorNumber == 1 ? colorNumber = 0 : colorNumber = 1;
+    this->textColor = Settings::instance()->getColor(colorNumber);
+
+    QList<QLabel *> list = this->ui->saContents->findChildren<QLabel *>(QRegExp("^(paragraph_[0-9][0-9]?|[0-9][0-9]?)$"));
+
+    if (!list.isEmpty()) {
+        foreach (QLabel *label, list) {
+            palette.setColor(label->foregroundRole(), this->textColor);
+            label->setPalette(palette);
+        }
+    }
+}
+
 void GameWindow::createActions()
 {
     this->backAct = new QAction(tr("&Back"), this);
     this->backAct->setStatusTip(tr("Return to game"));
-    connect(this->backAct, SIGNAL(triggered()), this, SLOT(back()));
+    connect(this->backAct, SIGNAL(triggered()), this, SLOT(stuck()));
 
     this->skipAct = new QAction(tr("&Skip"), this);
     this->skipAct->setShortcut(Qt::SHIFT + Qt::Key_S);
@@ -316,7 +340,7 @@ void GameWindow::createActions()
     this->toggleColorAct = new QAction(tr("&Toggle color"), this);
     this->toggleColorAct->setShortcut(Qt::MiddleButton);
     this->toggleColorAct->setStatusTip(tr("Set color one/two"));
-    connect(this->toggleColorAct, SIGNAL(triggered()), this, SLOT(stuck()));
+    connect(this->toggleColorAct, SIGNAL(triggered()), this, SLOT(toggleColor()));
 
     this->fullScreenAct = new QAction(tr("&Full screen"), this);
     this->fullScreenAct->setShortcut(Qt::ALT + Qt::Key_Enter);
