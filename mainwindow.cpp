@@ -1,22 +1,26 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+SettingsDialog* MainWindow::settings = 0;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    pSettingsDialog(new SettingsDialog(this)),
-  pGameMenu(new GameMenu(this))
+    menu(new GameMenu(this))
 {
     ui->setupUi(this);
+
+    MainWindow::settings = new SettingsDialog(this);
+
     connect(ui->pbOpen, SIGNAL(clicked()), this, SLOT(openFile()));
     connect(ui->pbExit, SIGNAL(clicked()), this, SLOT(exit()));
     connect(ui->pbSettings, SIGNAL(clicked()), this, SLOT(changeSettings()));
 
     if (!Settings::instance()->read()) {
-        this->pSettingsDialog->setDefault();
+        MainWindow::settings->setDefault();
         Settings::instance()->flush();
     } else {
-        this->pSettingsDialog->loadOnUi();
+        MainWindow::settings->loadOnUi();
     }
 }
 
@@ -28,11 +32,11 @@ MainWindow::~MainWindow()
 void MainWindow::openFile()
 {
     QString fileName = "C:/Documents and Settings/Admin/Qt projects/TextQuest/example.xml";
-    //fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
+    //QString fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
 
     if (!fileName.isEmpty()) {
-        this->pGameMenu->loadXml(fileName);
-        this->pGameMenu->exec();
+        this->menu->loadXml(fileName);
+        this->menu->exec();
     }
 }
 
@@ -43,5 +47,6 @@ void MainWindow::exit()
 
 void MainWindow::changeSettings()
 {
-    this->pSettingsDialog->exec();
+    MainWindow::settings->loadOnUi();
+    MainWindow::settings->exec();
 }

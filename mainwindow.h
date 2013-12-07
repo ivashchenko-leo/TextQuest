@@ -20,13 +20,13 @@ class MainWindow : public QMainWindow
     
 public:
     explicit MainWindow(QWidget *parent = 0);
-
+    static SettingsDialog *settings;
     ~MainWindow();
         
 private:
     Ui::MainWindow *ui;
-    SettingsDialog* pSettingsDialog;
-    GameMenu* pGameMenu;
+
+    GameMenu *menu;
 
 private slots:
     void openFile();
