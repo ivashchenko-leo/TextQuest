@@ -54,4 +54,5 @@ bool MouseFilter::leftButtonClicked()
         }
         return false;
     }
+    return true;
 }
