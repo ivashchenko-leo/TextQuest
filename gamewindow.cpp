@@ -20,20 +20,10 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
 
     this->ui->scrollArea->viewport()->installEventFilter(new MouseFilter(this->ui->scrollArea->viewport(), this));
 
-    if (Settings::instance()->getOption("FullScreen").toBool()) {
-        this->showFullScreen();
-    } else {
-        this->setFixedSize(Settings::Width, Settings::Height);
-    }
+    this->setResolution(Settings::instance()->getOption(Settings::FullScreen).toBool());
 
-    if (BASS_Init(-1, 44100, 0, this->winId(), NULL)) {
-        BASS_SetVolume(Settings::instance()->getOption(Settings::Volume).toFloat());
-    } else {
+    if (!BASS_Init(-1, 44100, BASS_DEVICE_DEFAULT, this->winId(), NULL))
         qWarning() << "Error! Bass_Init code " << BASS_ErrorGetCode();
-    }
-
-    this->ui->scrollArea->setFixedSize(this->size());
-    this->ui->saContents->setFixedSize(this->size().width()-10, this->size().height()-10);
 
     this->createActions();
     connect(this->pTimer, SIGNAL(timeout()), SLOT(showChars()));
@@ -43,6 +33,28 @@ GameWindow::~GameWindow()
 {
     BASS_Free();
     delete ui;
+}
+
+void GameWindow::setResolution(bool fullScreen)
+{
+    if (fullScreen) {
+        this->showFullScreen();
+    } else {
+        this->showNormal();
+        this->setFixedSize(Settings::Width, Settings::Height);
+    }
+
+    this->ui->scrollArea->setFixedSize(this->size());
+    this->ui->saContents->setFixedSize(this->size().width()-10, this->size().height()-10);
+
+    QList<QWidget *> list = this->ui->saContents->findChildren<QWidget* >(QRegExp("^(paragraph_[0-9][0-9]?|[0-9][0-9]?)$"));
+
+    if (!list.isEmpty()) {
+        foreach (QWidget *w, list) {
+            w->setFixedWidth(this->ui->saContents->size().width()-20);
+            w->setFixedHeight(w->heightForWidth(this->ui->saContents->size().width()-20));
+        }
+    }
 }
 
 void GameWindow::showParagraph(QDomNode paragraph)
@@ -96,6 +108,65 @@ void GameWindow::showChoices()
     }
 }
 
+void GameWindow::showImage(QDomNode image)
+{
+    if (!image.toElement().text().isEmpty()) {
+        QImage background(image.toElement().text());
+
+        if (!background.isNull()) {
+            if (background.size().width() > this->size().width()) {
+                background = background.scaledToWidth(this->size().width());
+            }
+            if (background.size().height() > this->size().height()) {
+                background = background.scaledToHeight(this->size().height());
+            }
+
+            QBrush brush(Qt::TexturePattern);
+            brush.setTextureImage(background);
+
+            QPalette palette = this->palette();
+            palette.setBrush(QPalette::Background, brush);
+
+            this->setPalette(palette);
+        } else {
+            qWarning() << QString("No such image %1").arg(image.toElement().text());
+        }
+    } else {
+        qDebug() << "Empty image tag!";
+    }
+    this->sendLeftClick();
+}
+
+void GameWindow::playSound(QDomNode sound)
+{
+    if (this->stream != 0) {
+        if (BASS_ChannelIsActive(this->stream))
+            BASS_ChannelStop(this->stream);
+
+        BASS_StreamFree(this->stream);
+    }
+
+    bool restart = !sound.toElement().attribute("repeat").isNull();
+    //QString name = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr(""));
+    char *fileName = sound.toElement().text().toUtf8().data();
+    //char *fileName = name.toUtf8().data();
+
+    if (Settings::instance()->getOption(Settings::Sound).toBool()) {
+        if (!sound.toElement().text().isEmpty()) {
+            this->stream = BASS_StreamCreateFile(FALSE, fileName, 0, 0, BASS_UNICODE);
+            //this->stream = BASS_StreamCreateFile(FALSE, "Citadel_Underbelly.mp3", 0, 0, BASS_UNICODE);
+            if (this->stream != 0) {
+                BASS_SetVolume(Settings::instance()->getOption(Settings::Volume).toFloat()/100.0);
+                BASS_ChannelPlay(this->stream, restart);
+            } else {
+                qWarning() << "Error! Bass_StreamCreateFile code" << BASS_ErrorGetCode();
+            }
+        }
+    }
+
+    this->sendLeftClick();
+}
+
 void GameWindow::setScene(QDomNode scene)
 {
     this->clrscr();
@@ -107,8 +178,10 @@ void GameWindow::clrscr()
     QList<QWidget* > list;
     list = this->ui->saContents->findChildren<QWidget* >(QRegExp("^(paragraph_[0-9][0-9]?|[0-9][0-9]?)$"));
 
-    foreach (QWidget *w, list) {
-        delete w;
+    if (!list.isEmpty()) {
+        foreach (QWidget *w, list) {
+            delete w;
+        }
     }
 }
 
@@ -158,60 +231,6 @@ void GameWindow::chooseAction(QDomNode node)
     }
 }
 
-void GameWindow::showImage(QDomNode image)
-{
-    if (!image.toElement().text().isEmpty()) {
-        QImage background(image.toElement().text());
-        //background.scaled(this->size())
-        if (!background.isNull()) {
-            if (background.size().width() > this->size().width()) {
-                background = background.scaledToWidth(this->size().width());
-            }
-            if (background.size().height() > this->size().height()) {
-                background = background.scaledToHeight(this->size().height());
-            }
-
-            QBrush brush(Qt::TexturePattern);
-            brush.setTextureImage(background);
-
-            QPalette palette = this->palette();
-            palette.setBrush(QPalette::Background, brush);
-
-            this->setPalette(palette);
-        } else {
-            qWarning() << QString("No such image %1").arg(image.toElement().text());
-        }
-    } else {
-        qDebug() << "Empty image tag!";
-    }
-    this->sendLeftClick();
-}
-
-void GameWindow::playSound(QDomNode sound)
-{
-    if (this->stream) {
-        if (BASS_ChannelIsActive(this->stream))
-            BASS_ChannelStop(this->stream);
-
-        BASS_StreamFree(this->stream);
-    }
-
-    bool playback = !sound.toElement().attribute("repeat").isNull();
-
-    if (Settings::instance()->getOption(Settings::Sound).toBool()) {
-        this->stream = BASS_StreamCreateFile(FALSE, sound.toElement().text().toUtf8().data(), 0, 0, BASS_UNICODE);
-        //this->stream = BASS_StreamCreateFile(FALSE, "Citadel_Underbelly.mp3", 0, 0, BASS_UNICODE);
-        qDebug() << sound.toElement().text().toUtf8().data();
-        if (this->stream) {
-            BASS_ChannelPlay(this->stream, playback);
-        } else {
-            qWarning() << "Error! Bass_StreamCreateFile code" << BASS_ErrorGetCode();
-        }
-    }
-
-    this->sendLeftClick();
-}
-
 void GameWindow::setChapter()
 {
     this->chapter = this->xmlDoc->getChapter(this->sceneId);
@@ -220,6 +239,7 @@ void GameWindow::setChapter()
 void GameWindow::sendLeftClick()
 {
     QPoint point;
+
     point.setX(this->size().width()/2);
     point.setY(this->size().height()/2);
 
@@ -238,72 +258,83 @@ void GameWindow::stuck()
 
 }
 
+void GameWindow::back()
+{
+}
+
 void GameWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu(this);
+
     menu.addAction(backAct);
     menu.addAction(skipAct);
     menu.addAction(saveAct);
     menu.addAction(loadAct);
-    menu.addAction(color1Act);
-    menu.addAction(color2Act);
+    menu.addAction(toggleColorAct);
     menu.addAction(fullScreenAct);
     menu.addAction(menuAct);
     menu.addAction(autoReadAct);
     menu.addAction(changeInterfaceAct);
+
     menu.exec(event->globalPos());
+}
+
+void GameWindow::skipText()
+{
+
+}
+
+void GameWindow::toggleFullScreen()
+{
+    bool fullScreen = !Settings::instance()->getOption(Settings::FullScreen).toBool();
+    Settings::instance()->setOption(Settings::FullScreen, QVariant(fullScreen));
+
+    this->setResolution(fullScreen);
 }
 
 void GameWindow::createActions()
 {
-
     this->backAct = new QAction(tr("&Back"), this);
-    //this->backAct->setShortcuts();
     this->backAct->setStatusTip(tr("Return to game"));
-    connect(this->backAct, SIGNAL(triggered()), this, SLOT(stuck()));
+    connect(this->backAct, SIGNAL(triggered()), this, SLOT(back()));
 
     this->skipAct = new QAction(tr("&Skip"), this);
-    //this->skipAct->setShortcuts(QKeySequence::New);
+    this->skipAct->setShortcut(Qt::SHIFT + Qt::Key_S);
     this->skipAct->setStatusTip(tr("Skip text"));
-    connect(this->skipAct, SIGNAL(triggered()), this, SLOT(stuck()));
+    connect(this->skipAct, SIGNAL(triggered()), this, SLOT(skipText()));
 
     this->saveAct = new QAction(tr("&Save"), this);
-    //this->saveAct->setShortcuts(QKeySequence::New);
+    this->saveAct->setShortcut(Qt::Key_F5);
     this->saveAct->setStatusTip(tr("Save game"));
     connect(this->saveAct, SIGNAL(triggered()), this, SLOT(stuck()));
 
     this->loadAct = new QAction(tr("&Load"), this);
-    //this->loadAct->setShortcuts(QKeySequence::New);
+    this->loadAct->setShortcut(Qt::Key_F6);
     this->loadAct->setStatusTip(tr("Load game"));
     connect(this->loadAct, SIGNAL(triggered()), this, SLOT(stuck()));
 
-    this->color1Act = new QAction(tr("&Color one"), this);
-    //this->color1Act->setShortcuts(QKeySequence::New);
-    this->color1Act->setStatusTip(tr("Set color one"));
-    connect(this->color1Act, SIGNAL(triggered()), this, SLOT(stuck()));
-
-    this->color2Act = new QAction(tr("&Color two"), this);
-    //this->color2Act->setShortcuts(QKeySequence::New);
-    this->color2Act->setStatusTip(tr("Set color two"));
-    connect(this->color2Act, SIGNAL(triggered()), this, SLOT(stuck()));
+    this->toggleColorAct = new QAction(tr("&Toggle color"), this);
+    this->toggleColorAct->setShortcut(Qt::MiddleButton);
+    this->toggleColorAct->setStatusTip(tr("Set color one/two"));
+    connect(this->toggleColorAct, SIGNAL(triggered()), this, SLOT(stuck()));
 
     this->fullScreenAct = new QAction(tr("&Full screen"), this);
-    //this->fullScreenAct->setShortcuts(QKeySequence::New);
+    this->fullScreenAct->setShortcut(Qt::ALT + Qt::Key_Enter);
     this->fullScreenAct->setStatusTip(tr("Set full screen"));
-    connect(this->fullScreenAct, SIGNAL(triggered()), this, SLOT(stuck()));
+    connect(this->fullScreenAct, SIGNAL(triggered()), this, SLOT(toggleFullScreen()));
 
     this->menuAct = new QAction(tr("&Game menu"), this);
-    //this->menuAct->setShortcuts(QKeySequence::New);
+    this->menuAct->setShortcut(Qt::Key_Escape);
     this->menuAct->setStatusTip(tr("Return to game menu"));
     connect(this->menuAct, SIGNAL(triggered()), this, SLOT(stuck()));
 
     this->autoReadAct = new QAction(tr("&Auto-read"), this);
-    //this->autoReadAct->setShortcuts(QKeySequence::New);
+    this->autoReadAct->setShortcut(Qt::SHIFT + Qt::Key_A);
     this->autoReadAct->setStatusTip(tr("Enable auto-read mode"));
     connect(this->autoReadAct, SIGNAL(triggered()), this, SLOT(stuck()));
 
     this->changeInterfaceAct = new QAction(tr("&Change interface"), this);
-    //this->changeInterfaceAct->setShortcuts(QKeySequence::New);
+    this->changeInterfaceAct->setShortcut(Qt::SHIFT + Qt::Key_D);
     connect(this->changeInterfaceAct, SIGNAL(triggered()), this, SLOT(stuck()));
 }
 

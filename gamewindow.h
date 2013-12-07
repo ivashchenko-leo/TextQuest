@@ -59,8 +59,7 @@ private:
     QAction *skipAct;
     QAction *saveAct;
     QAction *loadAct;
-    QAction *color1Act;
-    QAction *color2Act;
+    QAction *toggleColorAct;
     QAction *fullScreenAct;
     //QAction *settings;
     QAction *autoReadAct;
@@ -68,10 +67,14 @@ private:
     QAction *menuAct;
     void createActions();
     HSTREAM stream;
+    void setResolution(bool fullScreen);
 
 private slots:
     void showChars();
     void stuck();
+    void back();
+    void skipText();
+    void toggleFullScreen();
 
 };
 
