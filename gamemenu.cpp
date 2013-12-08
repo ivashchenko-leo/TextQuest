@@ -24,16 +24,57 @@ GameMenu::GameMenu(QWidget *parent) :
     connect(ui->pbNewGame, SIGNAL(clicked()), SLOT(newGame()));
     connect(ui->pbChapters, SIGNAL(clicked()), SLOT(chapters()));
     connect(ui->pbLoad, SIGNAL(clicked()), SLOT(loadMenu()));
+}
 
+void GameMenu::loadXml(QString fileName)
+{
+    this->xmlDoc->loadXml(fileName);
+}
+
+void GameMenu::prepare()
+{
     if (Settings::instance()->getOption(Settings::FullScreen).toBool()) {
         this->showFullScreen();
     } else {
         this->setFixedSize(Settings::Width, Settings::Height);
     }
+
+    char *fileName = this->xmlDoc->getMenuSound().toUtf8().data();
+
+    if (BASS_Init(-1, 44100, BASS_DEVICE_DEFAULT, this->winId(), NULL)) {
+        if (!this->xmlDoc->getMenuSound().isEmpty()) {
+            MainWindow::stream = BASS_StreamCreateFile(FALSE, fileName, 0, 0, BASS_UNICODE);
+            if (MainWindow::stream != 0) {
+                BASS_SetVolume(Settings::instance()->getOption(Settings::Volume).toFloat()/100.0);
+                BASS_ChannelPlay(MainWindow::stream, true);
+            } else {
+                qWarning() << "Error! Bass_StreamCreateFile code" << BASS_ErrorGetCode();
+            }
+        }
+    } else {
+        qWarning() << "Error! Bass_Init code " << BASS_ErrorGetCode();
+    }
+
+    QImage background(this->xmlDoc->getMenuImage());
+
+    if (background.isNull()) {
+        background = QImage(":/backgrounds/D:/Wallpaper/TextQuest/book tree.jpg");
+    }
+
+    QPalette palette = this->palette();
+    QBrush brush(Qt::TexturePattern);
+
+    background = background.scaled(this->size());
+    brush.setTextureImage(background);
+    palette.setBrush(QPalette::Background, brush);
+
+    this->setPalette(palette);
+
 }
 
 GameMenu::~GameMenu()
 {
+    BASS_Free();
     delete ui;
 }
 
@@ -49,12 +90,6 @@ void GameMenu::newGame()
 void GameMenu::loadMenu()
 {
 
-}
-
-void GameMenu::loadXml(QString fileName)
-{
-    this->xmlDoc->loadXml(fileName);
-    this->setToolTip(this->xmlDoc->getGameName());
 }
 
 void GameMenu::chapters()

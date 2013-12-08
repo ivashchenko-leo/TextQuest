@@ -6,7 +6,7 @@
 #include <QApplication>
 #include "gamemenu.h"
 #include "settingsdialog.h"
-
+#include "bass.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,10 +22,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     static SettingsDialog *settings;
     ~MainWindow();
-        
+    static HSTREAM stream;
+
 private:
     Ui::MainWindow *ui;
-
     GameMenu *menu;
 
 private slots:

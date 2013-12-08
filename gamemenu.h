@@ -21,6 +21,7 @@ public:
     explicit GameMenu(QWidget *parent = 0);
     ~GameMenu();
     void loadXml(QString fileName);
+    void prepare();
 
     const static QString GameTag;
     const static QString ChapterTag;

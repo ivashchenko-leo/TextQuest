@@ -23,16 +23,12 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
 
     this->setResolution(Settings::instance()->getOption(Settings::FullScreen).toBool());
 
-    if (!BASS_Init(-1, 44100, BASS_DEVICE_DEFAULT, this->winId(), NULL))
-        qWarning() << "Error! Bass_Init code " << BASS_ErrorGetCode();
-
     this->createActions();
     connect(this->pTimer, SIGNAL(timeout()), SLOT(showChars()));
 }
 
 GameWindow::~GameWindow()
 {
-    BASS_Free();
     delete ui;
 }
 
@@ -149,11 +145,11 @@ void GameWindow::showImage(QDomNode image)
 
 void GameWindow::playSound(QDomNode sound)
 {
-    if (this->stream != 0) {
-        if (BASS_ChannelIsActive(this->stream))
-            BASS_ChannelStop(this->stream);
+    if (MainWindow::stream != 0) {
+        if (BASS_ChannelIsActive(MainWindow::stream))
+            BASS_ChannelStop(MainWindow::stream);
 
-        BASS_StreamFree(this->stream);
+        BASS_StreamFree(MainWindow::stream);
     }
 
     bool restart = !sound.toElement().attribute("repeat").isNull();
@@ -163,11 +159,11 @@ void GameWindow::playSound(QDomNode sound)
 
     if (Settings::instance()->getOption(Settings::Sound).toBool()) {
         if (!sound.toElement().text().isEmpty()) {
-            this->stream = BASS_StreamCreateFile(FALSE, fileName, 0, 0, BASS_UNICODE);
+            MainWindow::stream = BASS_StreamCreateFile(FALSE, fileName, 0, 0, BASS_UNICODE);
             //this->stream = BASS_StreamCreateFile(FALSE, "Citadel_Underbelly.mp3", 0, 0, BASS_UNICODE);
-            if (this->stream != 0) {
+            if (MainWindow::stream != 0) {
                 BASS_SetVolume(Settings::instance()->getOption(Settings::Volume).toFloat()/100.0);
-                BASS_ChannelPlay(this->stream, restart);
+                BASS_ChannelPlay(MainWindow::stream, restart);
             } else {
                 qWarning() << "Error! Bass_StreamCreateFile code" << BASS_ErrorGetCode();
             }
@@ -273,14 +269,17 @@ void GameWindow::contextMenuEvent(QContextMenuEvent *event)
     QMenu menu(this);
 
     menu.addAction(backAct);
+    menu.addSeparator();
     menu.addAction(skipAct);
+    menu.addAction(autoReadAct);
+    menu.addAction(changeInterfaceAct);
+    menu.addSeparator();
     menu.addAction(saveAct);
     menu.addAction(loadAct);
+    menu.addSeparator();
     menu.addAction(toggleColorAct);
     menu.addAction(fullScreenAct);
     menu.addAction(menuAct);
-    menu.addAction(autoReadAct);
-    menu.addAction(changeInterfaceAct);
 
     menu.exec(event->globalPos());
 }

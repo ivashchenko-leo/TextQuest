@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 SettingsDialog* MainWindow::settings = 0;
+HSTREAM MainWindow::stream = 0;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,6 +23,18 @@ MainWindow::MainWindow(QWidget *parent) :
     } else {
         MainWindow::settings->loadOnUi();
     }
+
+    QPalette palette = this->palette();
+    QImage background(":/backgrounds/D:/Wallpaper/TextQuest/book tree.jpg");
+
+    background = background.scaled(this->size());
+
+    QBrush brush(Qt::TexturePattern);
+
+    brush.setTextureImage(background);
+    palette.setBrush(QPalette::Background, brush);
+
+    this->setPalette(palette);
 }
 
 MainWindow::~MainWindow()
@@ -36,6 +49,7 @@ void MainWindow::openFile()
 
     if (!fileName.isEmpty()) {
         this->menu->loadXml(fileName);
+        this->menu->prepare();
         this->menu->exec();
     }
 }
