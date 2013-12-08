@@ -44,6 +44,7 @@ private slots:
     void chapters();
     void loadMenu();
     void newGame();
+    bool close();
 
 };
 

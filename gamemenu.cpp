@@ -33,6 +33,14 @@ void GameMenu::loadXml(QString fileName)
 
 void GameMenu::prepare()
 {
+    QString style("color: ");
+    style += Settings::instance()->getColor(1).name() + ";";
+
+    this->ui->pbBack->setStyleSheet(style);
+    this->ui->pbNewGame->setStyleSheet(style);
+    this->ui->pbLoad->setStyleSheet(style);
+    this->ui->pbChapters->setStyleSheet(style);
+
     if (Settings::instance()->getOption(Settings::FullScreen).toBool()) {
         this->showFullScreen();
     } else {
@@ -74,8 +82,13 @@ void GameMenu::prepare()
 
 GameMenu::~GameMenu()
 {
-    BASS_Free();
     delete ui;
+}
+
+bool GameMenu::close()
+{
+    BASS_Free();
+    return QDialog::close();
 }
 
 void GameMenu::newGame()

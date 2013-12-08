@@ -39,12 +39,32 @@
      <height>180</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="font">
+    <font>
+     <italic>true</italic>
+    </font>
+   </property>
    <property name="orientation">
     <enum>Qt::Vertical</enum>
+   </property>
+   <property name="opaqueResize">
+    <bool>false</bool>
+   </property>
+   <property name="childrenCollapsible">
+    <bool>false</bool>
    </property>
    <widget class="QPushButton" name="pbNewGame">
     <property name="text">
      <string>Новая игра</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="pbLoad">
@@ -54,15 +74,24 @@
     <property name="text">
      <string>Загрузить</string>
     </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="pbChapters">
     <property name="text">
      <string>Главы</string>
     </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="pbBack">
     <property name="text">
      <string>Назад</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
