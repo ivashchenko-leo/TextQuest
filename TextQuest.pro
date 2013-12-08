@@ -47,3 +47,6 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L"D:/Projects/Libs/BASS/Window
 
 INCLUDEPATH += D:/Projects/Libs/BASS/Windows/c
 DEPENDPATH += D:/Projects/Libs/BASS/Windows/c
+
+RESOURCES += \
+    mainWindow.qrc

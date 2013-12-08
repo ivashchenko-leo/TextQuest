@@ -42,7 +42,6 @@ bool ChoiceFilter::eventFilter(QObject *obj, QEvent *event)
         label = qobject_cast<QLabel*>(obj);
         palette = label->palette();
         palette.setColor(label->foregroundRole(), this->gameWindow->textColor);
-        qDebug() << this->gameWindow->textColor.value();
         label->setPalette(palette);
 
         return true;
