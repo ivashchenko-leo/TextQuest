@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QApplication>
+#include "hoverfilter.h"
 #include "gamemenu.h"
 #include "settingsdialog.h"
 #include "bass.h"

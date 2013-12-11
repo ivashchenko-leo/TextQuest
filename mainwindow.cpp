@@ -17,6 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbExit, SIGNAL(clicked()), this, SLOT(exit()));
     connect(ui->pbSettings, SIGNAL(clicked()), this, SLOT(changeSettings()));
 
+    this->ui->pbOpen->installEventFilter(new HoverFilter());
+    this->ui->pbExit->installEventFilter(new HoverFilter());
+    this->ui->pbSettings->installEventFilter(new HoverFilter());
+
     if (!Settings::instance()->read()) {
         MainWindow::settings->setDefault();
         Settings::instance()->flush();

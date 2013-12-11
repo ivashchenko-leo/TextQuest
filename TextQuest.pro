@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     xmldom.cpp \
     gamewindow.cpp \
     mousefilter.cpp \
-    choicefilter.cpp
+    choicefilter.cpp \
+    hoverfilter.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     xmldom.h \
     gamewindow.h \
     mousefilter.h \
-    choicefilter.h
+    choicefilter.h \
+    hoverfilter.h
 
 FORMS    += mainwindow.ui \
     settings.ui \

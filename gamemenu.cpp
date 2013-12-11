@@ -24,6 +24,11 @@ GameMenu::GameMenu(QWidget *parent) :
     connect(ui->pbNewGame, SIGNAL(clicked()), SLOT(newGame()));
     connect(ui->pbChapters, SIGNAL(clicked()), SLOT(chapters()));
     connect(ui->pbLoad, SIGNAL(clicked()), SLOT(loadMenu()));
+
+    this->ui->pbBack->installEventFilter(new HoverFilter());
+    this->ui->pbNewGame->installEventFilter(new HoverFilter());
+    this->ui->pbChapters->installEventFilter(new HoverFilter());
+    this->ui->pbLoad->installEventFilter(new HoverFilter());
 }
 
 void GameMenu::loadXml(QString fileName)
@@ -33,14 +38,6 @@ void GameMenu::loadXml(QString fileName)
 
 void GameMenu::prepare()
 {
-    QString style("color: ");
-    style += Settings::instance()->getColor(1).name() + ";";
-
-    this->ui->pbBack->setStyleSheet(style);
-    this->ui->pbNewGame->setStyleSheet(style);
-    this->ui->pbLoad->setStyleSheet(style);
-    this->ui->pbChapters->setStyleSheet(style);
-
     if (Settings::instance()->getOption(Settings::FullScreen).toBool()) {
         this->showFullScreen();
     } else {
