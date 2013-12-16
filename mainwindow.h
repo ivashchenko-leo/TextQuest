@@ -9,6 +9,7 @@
 #include "settingsdialog.h"
 #include "bass.h"
 
+
 namespace Ui {
 class MainWindow;
 }

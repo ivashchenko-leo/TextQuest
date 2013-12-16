@@ -34,6 +34,7 @@ public:
     const static QString ChoiceTag;
     const static QString MenuImgTag;
     const static QString MenuSoundTag;
+    const static QString JumpTag;
 
     XmlDom *xmlDoc;
 

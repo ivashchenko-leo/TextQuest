@@ -18,6 +18,7 @@ protected:
 private:
     GameWindow *gameWindow;
     bool leftButtonClicked();
+    bool choiceClicked(QString objectName);
 };
 
 #endif // MOUSEFILTER_H

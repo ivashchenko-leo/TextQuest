@@ -44,6 +44,7 @@ public:
     bool choiceNotExist;
     void sendLeftClick();
     QColor textColor;
+    QWidget *getWidgetOnCoord(QPoint coord);
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
@@ -56,6 +57,7 @@ private:
     void showImage(QDomNode image);
     void playSound(QDomNode sound);
     void clrscr();
+    void jump(QDomNode jumpNode);
     QAction *backAct;
     QAction *skipAct;
     QAction *saveAct;
@@ -76,6 +78,7 @@ private slots:
     void skipText();
     void toggleFullScreen();
     void toggleColor();
+    void choiceClicked();
 
 };
 

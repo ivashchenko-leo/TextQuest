@@ -54,6 +54,11 @@ void GameWindow::setResolution(bool fullScreen)
     }
 }
 
+void GameWindow::choiceClicked()
+{
+    this->setScene();
+}
+
 void GameWindow::showParagraph(QDomNode paragraph)
 {
     this->pText = paragraph.toElement().text();
@@ -101,17 +106,23 @@ void GameWindow::showChoices()
         QLabel *label = new QLabel(list.at(i).toElement().text());
 
         palette.setColor(label->foregroundRole(), this->textColor);
+
         label->setWordWrap(true);
         label->setPalette(palette);
         label->setFont(Settings::instance()->getFont());
         label->setMinimumWidth(this->ui->saContents->size().width()/2);
         label->setMaximumWidth(this->ui->saContents->size().width()-20);
 
-        label->installEventFilter(new ChoiceFilter(label, this));
+        //label->installEventFilter(new ChoiceFilter(label));
         label->setObjectName(QString::number(i));
 
         this->mainLayout->addWidget(label);
     }
+}
+
+QWidget *GameWindow::getWidgetOnCoord(QPoint coord)
+{
+    return this->ui->saContents->childAt(coord);
 }
 
 void GameWindow::showImage(QDomNode image)
@@ -173,6 +184,20 @@ void GameWindow::playSound(QDomNode sound)
     this->sendLeftClick();
 }
 
+void GameWindow::jump(QDomNode jumpNode)
+{
+    this->tCount = -1;
+
+    if (jumpNode.toElement().attribute("scene").isEmpty()) {
+        qWarning() << "Error! empty attribute into <jump>, scene id =" << this->sceneId;
+    } else {
+        this->sceneId = jumpNode.toElement().attribute("scene");
+        this->setScene();
+    }
+
+    this->sendLeftClick();
+}
+
 void GameWindow::setScene(QDomNode scene)
 {
     this->clrscr();
@@ -181,12 +206,13 @@ void GameWindow::setScene(QDomNode scene)
 
 void GameWindow::clrscr()
 {
-    QList<QWidget* > list;
-    list = this->ui->saContents->findChildren<QWidget* >(QRegExp("^(paragraph_[0-9][0-9]?|[0-9][0-9]?)$"));
+    QList<QLabel* > list;
+    list = this->ui->saContents->findChildren<QLabel* >(QRegExp("^(paragraph_[0-9][0-9]?|[0-9][0-9]?)$"));
 
     if (!list.isEmpty()) {
-        foreach (QWidget *w, list) {
-            delete w;
+        foreach (QLabel *w, list) {
+            //w->removeEventFilter(w);
+            w->~QLabel();
         }
     }
 }
@@ -229,8 +255,12 @@ void GameWindow::chooseAction(QDomNode node)
                 if (node.toElement().tagName() == GameMenu::ChoiceTag) {
                     this->showChoices();
                 } else {
-                    this->sendLeftClick();
-                    qWarning() << "Unexpected tag! " << node.toElement().tagName();
+                    if (node.toElement().tagName() == GameMenu::JumpTag) {
+                        this->jump(node);
+                    } else {
+                        this->sendLeftClick();
+                        qWarning() << "Unexpected tag! " << node.toElement().tagName();
+                    }
                 }
             }
         }

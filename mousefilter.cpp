@@ -11,16 +11,23 @@ bool MouseFilter::eventFilter(QObject *, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress) {
         if (((QMouseEvent*)event)->button() == Qt::LeftButton) {
-            return this->leftButtonClicked();
-        } else {
-            if (((QMouseEvent*)event)->button() == Qt::RightButton) {
-                qDebug() << "Right click";
-                return true;
+            QString objName;
+
+            if (this->gameWindow->getWidgetOnCoord(((QMouseEvent*)event)->pos()) != 0) {
+                objName = this->gameWindow->getWidgetOnCoord(((QMouseEvent*)event)->pos())->objectName();
             } else {
-                if (((QMouseEvent*)event)->button() == Qt::MiddleButton) {
-                    return true;
-                }
+                objName = "other";
             }
+
+            QRegExp reg("^[0-9][0-9]?$");
+
+            if (reg.indexIn(objName) != -1) {
+                return this->choiceClicked(objName);
+            } else {
+                return this->leftButtonClicked();
+            }
+        } else {
+            return false;
         }
     } else {
         if (event->type() == QEvent::MouseButtonDblClick) {
@@ -32,8 +39,26 @@ bool MouseFilter::eventFilter(QObject *, QEvent *event)
     return false;
 }
 
+bool MouseFilter::choiceClicked(QString objectName)
+{
+    QDomNode choiceNode;
+    choiceNode = this->gameWindow->xmlDoc->getChoiceList(this->gameWindow->scene)
+            .at(objectName.toInt());
+
+    if (!choiceNode.toElement().attribute("file").isEmpty()) {
+        this->gameWindow->setNewFile(choiceNode.toElement().attribute("file"));
+    }
+    this->gameWindow->sceneId = choiceNode.toElement().attribute("scene");
+    this->gameWindow->choiceNotExist = true;
+    this->gameWindow->setScene();
+    this->gameWindow->sendLeftClick();
+
+    return true;
+}
+
 bool MouseFilter::leftButtonClicked()
 {
+
     if (this->gameWindow->pTimer->isActive()) {
         this->gameWindow->pTimer->stop();
         this->gameWindow->finishParagraph();

@@ -48,8 +48,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::openFile()
 {
-    QString fileName = "C:/Documents and Settings/Admin/Qt projects/TextQuest/example.xml";
-    //QString fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
+    //QString fileName = "C:/Documents and Settings/Admin/Qt projects/TextQuest/example.xml";
+    QString fileName = QFileDialog::getOpenFileName(this,  tr("Open File"), "C:", tr("XML files (*.xml)"));
 
     if (!fileName.isEmpty()) {
         this->menu->loadXml(fileName);

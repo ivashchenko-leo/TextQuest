@@ -12,6 +12,7 @@ const QString GameMenu::FileTag("file");
 const QString GameMenu::ChoiceTag("choice");
 const QString GameMenu::MenuImgTag("menuimg");
 const QString GameMenu::MenuSoundTag("menusound");
+const QString GameMenu::JumpTag("jump");
 
 GameMenu::GameMenu(QWidget *parent) :
     QDialog(parent),

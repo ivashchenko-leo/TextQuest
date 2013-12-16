@@ -10,14 +10,13 @@ class ChoiceFilter : public QObject
 {
     Q_OBJECT
 public:
-    explicit ChoiceFilter(QObject *parent = 0, GameWindow *window = 0);
+    explicit ChoiceFilter(QObject *parent = 0);
 
 protected:
     virtual bool eventFilter(QObject *obj, QEvent *event);
     
 private:
-    GameWindow *gameWindow;
-
+    QColor usualColor;
 };
 
 #endif // CHOICEFILTER_H
