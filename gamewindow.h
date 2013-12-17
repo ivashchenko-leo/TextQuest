@@ -25,7 +25,8 @@ class GameWindow : public QDialog
 public:
     explicit GameWindow(QWidget *parent = 0, XmlDom *xmlDoc = 0);
     ~GameWindow();
-    void setScene(QDomNode scene);
+    void setScene(QString scene);
+    void setScene();
     void chooseAction(QDomNode node);
     void start();
     QTimer *pTimer;
@@ -34,7 +35,6 @@ public:
     QString sceneId;
     void finishParagraph();
     XmlDom *xmlDoc;
-    void setScene();
     QDomNode scene;
     int chapter;
     void setChapter();
@@ -79,6 +79,10 @@ private slots:
     void toggleFullScreen();
     void toggleColor();
     void choiceClicked();
+    void toGameMenu();
+
+signals:
+    void returnToMenu(QString sceneId);
 
 };
 

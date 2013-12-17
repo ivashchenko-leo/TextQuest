@@ -14,7 +14,7 @@ GameWindow::GameWindow(QWidget *parent, XmlDom *xmlDoc) :
     this->xmlDoc = xmlDoc;
     this->cCount = 0;
     this->choiceNotExist = true;
-    this->sceneId = "1";
+    //this->sceneId = "1";
     this->chapter = 0;
     this->tCount = 0;
     this->textColor = Settings::instance()->getColor(0);
@@ -198,10 +198,9 @@ void GameWindow::jump(QDomNode jumpNode)
     this->sendLeftClick();
 }
 
-void GameWindow::setScene(QDomNode scene)
+void GameWindow::setScene(QString scene)
 {
-    this->clrscr();
-    this->scene = scene;
+    this->sceneId = scene;
 }
 
 void GameWindow::clrscr()
@@ -345,6 +344,12 @@ void GameWindow::toggleColor()
     }
 }
 
+void GameWindow::toGameMenu()
+{
+    emit returnToMenu(this->sceneId);
+    this->close();
+}
+
 void GameWindow::createActions()
 {
     this->backAct = new QAction(tr("&Back"), this);
@@ -367,7 +372,8 @@ void GameWindow::createActions()
     connect(this->loadAct, SIGNAL(triggered()), this, SLOT(stuck()));
 
     this->toggleColorAct = new QAction(tr("&Toggle color"), this);
-    this->toggleColorAct->setShortcut(Qt::MiddleButton);
+    //this->toggleColorAct->setShortcut(Qt::MiddleButton);
+    this->toggleColorAct->setShortcut(QKeySequence(Qt::MiddleButton));
     this->toggleColorAct->setStatusTip(tr("Set color one/two"));
     connect(this->toggleColorAct, SIGNAL(triggered()), this, SLOT(toggleColor()));
 
@@ -377,9 +383,9 @@ void GameWindow::createActions()
     connect(this->fullScreenAct, SIGNAL(triggered()), this, SLOT(toggleFullScreen()));
 
     this->menuAct = new QAction(tr("&Game menu"), this);
-    this->menuAct->setShortcut(Qt::Key_Escape);
+    this->menuAct->setShortcut(QKeySequence(Qt::Key_Escape));
     this->menuAct->setStatusTip(tr("Return to game menu"));
-    connect(this->menuAct, SIGNAL(triggered()), this, SLOT(stuck()));
+    connect(this->menuAct, SIGNAL(triggered()), this, SLOT(toGameMenu()));
 
     this->autoReadAct = new QAction(tr("&Auto-read"), this);
     this->autoReadAct->setShortcut(Qt::SHIFT + Qt::Key_A);

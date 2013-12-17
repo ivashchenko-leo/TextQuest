@@ -26,10 +26,19 @@ GameMenu::GameMenu(QWidget *parent) :
     connect(ui->pbChapters, SIGNAL(clicked()), SLOT(chapters()));
     connect(ui->pbLoad, SIGNAL(clicked()), SLOT(loadMenu()));
 
-    this->ui->pbBack->installEventFilter(new HoverFilter());
-    this->ui->pbNewGame->installEventFilter(new HoverFilter());
-    this->ui->pbChapters->installEventFilter(new HoverFilter());
-    this->ui->pbLoad->installEventFilter(new HoverFilter());
+    this->ui->pbBack->installEventFilter(new HoverFilter(this->ui->pbBack));
+    this->ui->pbNewGame->installEventFilter(new HoverFilter(this->ui->pbNewGame));
+    this->ui->pbChapters->installEventFilter(new HoverFilter(this->ui->pbChapters));
+    this->ui->pbLoad->installEventFilter(new HoverFilter(this->ui->pbLoad));
+
+    this->continueButton.setParent(this);
+    this->continueButton.setText(tr("Продолжить"));
+    this->continueButton.setFlat(true);
+    this->continueButton.setPalette(this->ui->pbBack->palette());
+    this->continueButton.installEventFilter(new HoverFilter(&this->continueButton));
+    connect(&this->continueButton, SIGNAL(clicked()), this, SLOT(startPlay()));
+    this->ui->splitter->addWidget(&this->continueButton);
+    this->hideContinueButton();
 }
 
 void GameMenu::loadXml(QString fileName)
@@ -37,16 +46,24 @@ void GameMenu::loadXml(QString fileName)
     this->xmlDoc->loadXml(fileName);
 }
 
-void GameMenu::prepare()
+void GameMenu::setBackgroundImage(QImage background)
 {
-    if (Settings::instance()->getOption(Settings::FullScreen).toBool()) {
-        this->showFullScreen();
-    } else {
-        this->setFixedSize(Settings::Width, Settings::Height);
+    if (background.isNull()) {
+        background = QImage(":/backgrounds/D:/Wallpaper/TextQuest/book tree.jpg");
     }
 
-    char *fileName = this->xmlDoc->getMenuSound().toUtf8().data();
+    QPalette palette = this->palette();
+    QBrush brush(Qt::TexturePattern);
 
+    background = background.scaled(this->size());
+    brush.setTextureImage(background);
+    palette.setBrush(QPalette::Background, brush);
+
+    this->setPalette(palette);
+}
+
+void GameMenu::playSound(char *fileName)
+{
     if (BASS_Init(-1, 44100, BASS_DEVICE_DEFAULT, this->winId(), NULL)) {
         if (!this->xmlDoc->getMenuSound().isEmpty()) {
             MainWindow::stream = BASS_StreamCreateFile(FALSE, fileName, 0, 0, BASS_UNICODE);
@@ -60,21 +77,19 @@ void GameMenu::prepare()
     } else {
         qWarning() << "Error! Bass_Init code " << BASS_ErrorGetCode();
     }
+}
 
-    QImage background(this->xmlDoc->getMenuImage());
-
-    if (background.isNull()) {
-        background = QImage(":/backgrounds/D:/Wallpaper/TextQuest/book tree.jpg");
+void GameMenu::prepare()
+{
+    if (Settings::instance()->getOption(Settings::FullScreen).toBool()) {
+        this->showFullScreen();
+    } else {
+        this->setFixedSize(Settings::Width, Settings::Height);
     }
 
-    QPalette palette = this->palette();
-    QBrush brush(Qt::TexturePattern);
+    this->playSound(this->xmlDoc->getMenuSound().toUtf8().data());
 
-    background = background.scaled(this->size());
-    brush.setTextureImage(background);
-    palette.setBrush(QPalette::Background, brush);
-
-    this->setPalette(palette);
+    this->setBackgroundImage(QImage(this->xmlDoc->getMenuImage()));
 
 }
 
@@ -89,13 +104,41 @@ bool GameMenu::close()
     return QDialog::close();
 }
 
-void GameMenu::newGame()
+void GameMenu::hideContinueButton()
+{
+    this->continueButton.hide();
+}
+
+void GameMenu::startPlay()
 {
     GameWindow gameWindow(this, this->xmlDoc);
+
     this->hide();
+    this->hideContinueButton();
+
     connect(&gameWindow, SIGNAL(destroyed()), this, SLOT(show()));
+    connect(&gameWindow, SIGNAL(returnToMenu(QString)), this, SLOT(setScene(QString)));
+
+    gameWindow.setScene(this->sceneId);
     gameWindow.start();
     gameWindow.exec();
+}
+
+void GameMenu::newGame()
+{
+    this->sceneId = "1";
+    this->startPlay();
+}
+
+void GameMenu::showContinueButton()
+{
+    this->continueButton.show();
+}
+
+void GameMenu::setScene(QString sceneId)
+{
+    this->showContinueButton();
+    this->sceneId = sceneId;
 }
 
 void GameMenu::loadMenu()

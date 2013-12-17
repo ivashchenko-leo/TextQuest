@@ -29,6 +29,8 @@ public:
 private:
     Ui::MainWindow *ui;
     GameMenu *menu;
+    void setBackgroundImage(QImage background);
+    void loadSettings();
 
 private slots:
     void openFile();

@@ -6,6 +6,7 @@
 #include "xmldom.h"
 #include <QMessageBox>
 #include "gamewindow.h"
+#include <QPushButton>
 
 namespace Ui {
 class GameMenu;
@@ -40,13 +41,20 @@ public:
 
 private:
     Ui::GameMenu *ui;
+    QString sceneId;
+    void setBackgroundImage(QImage background);
+    void playSound(char *fileName);
+    void showContinueButton();
+    void hideContinueButton();
+    QPushButton continueButton;
 
 private slots:
     void chapters();
     void loadMenu();
     void newGame();
     bool close();
-
+    void setScene(QString sceneId);
+    void startPlay();
 };
 
 #endif // GAMEMENU_H

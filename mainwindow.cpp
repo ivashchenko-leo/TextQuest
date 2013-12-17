@@ -21,15 +21,24 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->pbExit->installEventFilter(new HoverFilter());
     this->ui->pbSettings->installEventFilter(new HoverFilter());
 
+    this->loadSettings();
+
+    this->setBackgroundImage(QImage(":/backgrounds/D:/Wallpaper/TextQuest/book tree.jpg"));
+}
+
+void MainWindow::loadSettings()
+{
     if (!Settings::instance()->read()) {
         MainWindow::settings->setDefault();
         Settings::instance()->flush();
     } else {
         MainWindow::settings->loadOnUi();
     }
+}
 
+void MainWindow::setBackgroundImage(QImage background)
+{
     QPalette palette = this->palette();
-    QImage background(":/backgrounds/D:/Wallpaper/TextQuest/book tree.jpg");
 
     background = background.scaled(this->size());
 
