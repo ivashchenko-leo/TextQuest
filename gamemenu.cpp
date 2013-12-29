@@ -8,7 +8,7 @@ const QString GameMenu::ImageTag("image");
 const QString GameMenu::SoundTag("sound");
 const QString GameMenu::IconTag("icon");
 const QString GameMenu::PTag("p");
-const QString GameMenu::FileTag("file");
+const QString GameMenu::EndTag("end");
 const QString GameMenu::ChoiceTag("choice");
 const QString GameMenu::MenuImgTag("menuimg");
 const QString GameMenu::MenuSoundTag("menusound");
@@ -32,7 +32,7 @@ GameMenu::GameMenu(QWidget *parent) :
     this->ui->pbLoad->installEventFilter(new HoverFilter(this->ui->pbLoad));
 
     this->continueButton.setParent(this);
-    this->continueButton.setText(tr("Продолжить"));
+    this->continueButton.setText(QString(tr("Продолжить").toUtf8()));
     this->continueButton.setFlat(true);
     this->continueButton.setPalette(this->ui->pbBack->palette());
     this->continueButton.installEventFilter(new HoverFilter(&this->continueButton));
@@ -49,7 +49,7 @@ void GameMenu::loadXml(QString fileName)
 void GameMenu::setBackgroundImage(QImage background)
 {
     if (background.isNull()) {
-        background = QImage(":/backgrounds/D:/Wallpaper/TextQuest/book tree.jpg");
+        background = QImage(":/backgrounds/book tree.jpg");
     }
 
     QPalette palette = this->palette();
