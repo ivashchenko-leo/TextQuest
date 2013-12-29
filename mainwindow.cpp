@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->loadSettings();
 
-    this->setBackgroundImage(QImage(":/backgrounds/D:/Wallpaper/TextQuest/book tree.jpg"));
+    this->setBackgroundImage(QImage(":/backgrounds/book tree.jpg"));
 }
 
 void MainWindow::loadSettings()

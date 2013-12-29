@@ -68,9 +68,10 @@ private:
     QAction *autoReadAct;
     QAction *changeInterfaceAct;
     QAction *menuAct;
+    QImage background;
     void createActions();
     void setResolution(bool fullScreen);
-
+    bool setBackgroundImage(QImage image);
 
 private slots:
     void showChars();
